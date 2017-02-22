@@ -15,8 +15,6 @@ import java.util.Date;
 @Table(name = "dir")
 public class DirInfo {
 	@Id
-	@GenericGenerator(name = "dirInfoId", strategy = "uuid")
-	@GeneratedValue(generator = "dirInfoId")
 	private String id;
 	private String name;
 	private String parentId; // 父类id
@@ -25,6 +23,9 @@ public class DirInfo {
 	private Date createTime;
 	private String modifyUserId;
 	private Date modifyTime;
+
+	public DirInfo() {
+	}
 
 	public String getId() {
 		return id;
