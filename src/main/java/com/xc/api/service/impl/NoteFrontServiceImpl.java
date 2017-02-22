@@ -23,13 +23,9 @@ public class NoteFrontServiceImpl implements NoteFrontService {
 	private NoteLogic noteLogic;
 
 	@PostMapping("/create")
-	public String createNote() {
-		Note note = new Note();
+	public String createNote(Note note) {
 		String id = GenerateUUID.getUUID32();
 		note.setId(id);
-		note.setTitle("title");
-		note.setContent("content");
-		note.setType(NoteConstant.TYPE_NORMAL);
 		return RestReturnUtil.toObject("id", noteLogic.createNote(note));
 	}
 }

@@ -18,4 +18,6 @@ public class NoteLogicImpl implements NoteLogic {
 		noteDao.save(note);
 		return note.getId();
 	}
+
+
 }
