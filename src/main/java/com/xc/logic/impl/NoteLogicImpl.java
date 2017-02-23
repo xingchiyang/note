@@ -7,8 +7,10 @@ import com.xc.logic.NoteLogic;
 import com.xc.util.GenerateUUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Administrator on 2017/02/22 0022.
@@ -45,6 +47,18 @@ public class NoteLogicImpl implements NoteLogic {
 	@Override
 	public Note getNoteById(String id) {
 		return noteDao.findOne(id);
+	}
+
+	@Override
+	public List<Note> getNotesList(String name, String dirId, Integer type, Integer page, Integer size, String sortKey,
+			Integer sortType) {
+		return null;
+	}
+
+	@Override
+	@Transactional
+	public void removeNoteByid(String id) {
+		noteDao.delete(id);
 	}
 
 }

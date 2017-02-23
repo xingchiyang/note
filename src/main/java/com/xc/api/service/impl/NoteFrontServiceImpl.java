@@ -4,14 +4,15 @@ import com.alibaba.fastjson.JSON;
 import com.xc.api.service.NoteFrontService;
 import com.xc.constant.Constant;
 import com.xc.entity.Note;
-		import com.xc.logic.NoteLogic;
-		import com.xc.util.RestReturnUtil;
-		import com.xc.util.ValidateUtil;
-		import org.springframework.beans.factory.annotation.Autowired;
-		import org.springframework.web.bind.annotation.PostMapping;
-		import org.springframework.web.bind.annotation.RequestBody;
-		import org.springframework.web.bind.annotation.RequestMapping;
-		import org.springframework.web.bind.annotation.RestController;
+import com.xc.logic.NoteLogic;
+import com.xc.util.JsonUtil;
+import com.xc.util.RestReturnUtil;
+import com.xc.util.ValidateUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Created by Administrator on 2017/02/22 0022.
@@ -22,7 +23,7 @@ public class NoteFrontServiceImpl implements NoteFrontService {
 	@Autowired
 	private NoteLogic noteLogic;
 
-	@PostMapping("/create")
+	@PostMapping("/save")
 	@Override
 	public String createNote(@RequestBody String jsonString) {
 		ValidateUtil.validateStrBlank(jsonString, "请求参数为空");
@@ -32,7 +33,7 @@ public class NoteFrontServiceImpl implements NoteFrontService {
 		return RestReturnUtil.toObject("id", noteLogic.createNote(note));
 	}
 
-	@PostMapping("/modify")
+	@PostMapping("/update")
 	@Override
 	public String modifyNote(@RequestBody String jsonString) {
 		ValidateUtil.validateStrBlank(jsonString, "请求参数为空");
@@ -44,4 +45,27 @@ public class NoteFrontServiceImpl implements NoteFrontService {
 		}
 		return null;
 	}
+
+	@GetMapping(value = "/get/{id}", consumes = "*/*")
+	@Override
+	public String getNote(@PathVariable String id) {
+		Note note = noteLogic.getNoteById(id);
+		return JsonUtil.includePropToJson(note);
+	}
+
+	@GetMapping(value = "/query", consumes = "*/*")
+	@Override
+	public String getNotesList() {
+		List<Note> notesList = noteLogic.getNotesList(null, null, null, null, null, null, null);
+		return JsonUtil.includePropToJson(noteLogic);
+	}
+
+	@GetMapping(value = "/delete/{id}", consumes = "*/*")
+	@Override
+	public void removeNote(@PathVariable String id) {
+		if (StringUtils.isEmpty(id))
+			return;
+		noteLogic.removeNoteByid(id);
+	}
+
 }
