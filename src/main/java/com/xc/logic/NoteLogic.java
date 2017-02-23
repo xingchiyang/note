@@ -7,4 +7,8 @@ import com.xc.entity.Note;
  */
 public interface NoteLogic {
 	public String createNote(Note note);
+
+	public boolean modifyNote(Note note);
+
+	public Note getNoteById(String id);
 }
