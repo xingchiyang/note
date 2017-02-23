@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xc.dao.NoteDao">
+    <insert id="insert" parameterType="com.xc.entity.Note">
+      insert into note(id,title,content,dir_id,path,create_time,modify_time,type,status,user_id)
+      values (
+        #{id},#{title},#{content},#{dirId},#{path},#{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},#{type},#{status},#{userId}
+      )
+    </insert>
+</mapper>
