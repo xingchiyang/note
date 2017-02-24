@@ -18,8 +18,7 @@
     <!-- define the SqlSessionFactory -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
-        <property name="mapperLocations" value="classpath*:com/xc/dao/mapper/*.xml"/>
-        <property name="typeAliasesPackage" value="com.xc.entity" />
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
     </bean>
 
     <!-- scan for mapper interfaces and let them be autowired -->

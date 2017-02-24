@@ -7,6 +7,3 @@ spring:
 server:
   port: 8080
   context-path: /note
-mybatis:
-  mapper-locations: classpath*:/com.xc.dao.mapper/*.xml
-  type-aliases-package: com.xc.entity
