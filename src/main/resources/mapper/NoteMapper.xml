@@ -3,10 +3,61 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xc.dao.NoteDao">
+    <resultMap id="noteResultMap" type="com.xc.entity.Note">
+        <result property="id" column="id"/>
+        <result property="dirId" column="dir_id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="type" column="type"/>
+        <result property="path" column="path"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
+        <result property="status" column="status"/>
+        <result property="userId" column="user_id"/>
+    </resultMap>
+
     <insert id="insert" parameterType="com.xc.entity.Note">
       insert into note(id,title,content,dir_id,path,create_time,modify_time,type,status,user_id)
       values (
         #{id},#{title},#{content},#{dirId},#{path},#{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},#{type},#{status},#{userId}
       )
     </insert>
+    <update id="update" parameterType="com.xc.entity.Note">
+        UPDATE note
+        <set>
+            <if test="dirId != null">
+                dir_id = #{dirId},
+            </if>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="content != null">
+                content = #{content},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="path != null">
+                path = #{path},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime, jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime, jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectNoteById" resultMap="noteResultMap">
+      select * from note
+      where id = #{id}
+    </select>
 </mapper>

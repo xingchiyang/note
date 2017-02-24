@@ -1,38 +1,28 @@
 package com.xc.entity;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.util.Date;
 
 /**
  * Created by Administrator on 2017/02/22 0022.
  */
-@Entity
 public class Note {
-	@Id
 	private String id;
 
 	private String dirId;
 
-	@Column(nullable = false)
 	private String title; // 标题
 
-	@Column(columnDefinition = "longtext")
 	private String content; // 内容
 
-	@Column(columnDefinition = "tinyint", nullable = false)
 	private Integer type; // 笔记类型，markdown、常规笔记
 
 	private String path; // 笔记所在系统文件中的目录
 
-	@Column(columnDefinition = "timestamp", nullable = false)
 	private Date createTime;
 
-	@Column(columnDefinition = "timestamp", nullable = false)
 	private Date modifyTime;
 
-	@Column(columnDefinition = "tinyint", nullable = false)
 	private Integer status; // 笔记的状态，是否已删除，常规
 
 	private String userId;

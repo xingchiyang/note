@@ -29,18 +29,18 @@ public class NoteLogicImpl implements NoteLogic {
 		return id;
 	}
 
-//	@Override
-//	public boolean modifyNote(Note note) {
-//		Note oldNote = getNoteById(note.getId());
-//		if (oldNote == null) {
-//			return false;
-//		}
-//		oldNote.setContent(note.getContent());
-//		oldNote.setTitle(note.getTitle());
-//		oldNote.setModifyTime(new Date());
-//		noteDao.save(oldNote);
-//		return true;
-//	}
+	@Override
+	public boolean modifyNote(Note note) {
+		Note oldNote = getNoteById(note.getId());
+		if (oldNote == null) {
+			return false;
+		}
+		oldNote.setContent(note.getContent());
+		oldNote.setTitle(note.getTitle());
+		oldNote.setModifyTime(new Date());
+		noteDao.update(oldNote);
+		return true;
+	}
 
 	@Override
 	public Note getNoteById(String id) {

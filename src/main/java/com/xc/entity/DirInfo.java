@@ -1,31 +1,21 @@
 package com.xc.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Date;
 
 /**
  * Created by Administrator on 2017/02/22 0022.
  */
-@Entity
-@Table(name = "dir")
 public class DirInfo {
-	@Id
 	private String id;
 
-	@Column(nullable = false)
 	private String name;
 
 	private String parentId; // 父类id
 
 	private String userId;
 
-	@Column(columnDefinition = "timestamp", nullable = false)
 	private Date createTime;
 
-	@Column(columnDefinition = "timestamp", nullable = false)
 	private Date modifyTime;
 
 	public DirInfo() {
