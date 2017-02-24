@@ -1,11 +1,11 @@
 package com.xc;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
-@MapperScan(basePackages = { "com.xc.dao" })
+@ImportResource(locations = "classpath:/spring-mybatis.xml")
 public class NoteApplication {
 
 	public static void main(String[] args) {
