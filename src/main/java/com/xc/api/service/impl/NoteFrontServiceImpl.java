@@ -54,9 +54,13 @@ public class NoteFrontServiceImpl implements NoteFrontService {
 
 	@GetMapping(value = "/query", consumes = "*/*")
 	@Override
-	public String getNotesList(@RequestParam("name") String name, @RequestParam("dirId") String dirId,
-			@RequestParam("type") Integer type, @RequestParam("page") Integer page, @RequestParam("size") Integer size,
-			@RequestParam("sortKey") String sortKey, @RequestParam("sortType") String sortType) {
+	public String getNotesList(@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "dirId", required = false) String dirId,
+			@RequestParam(value = "type", required = false) Integer type,
+			@RequestParam(value = "page", required = false) Integer page,
+			@RequestParam(value = "size", required = false) Integer size,
+			@RequestParam(value = "sortKey", required = false) String sortKey,
+			@RequestParam(value = "sortType", required = false) String sortType) {
 		Pagination<Note> notesList = noteLogic.getNotesList(null, null, null, null, null, null, null);
 		return JsonUtil.includePropToJson(notesList.formate());
 	}
