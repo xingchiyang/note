@@ -35,7 +35,7 @@
                 content = #{content},
             </if>
             <if test="type != null">
-                type = #{type},
+                `type` = #{type},
             </if>
             <if test="path != null">
                 path = #{path},
@@ -60,4 +60,31 @@
       select * from note
       where id = #{id}
     </select>
+
+
+    <select id="countNotesByCriterions" parameterType="com.xc.util.Criterions"
+            resultType="java.lang.Integer">
+        select count(*) from note
+        <if test="_parameter != null">
+            <include refid="com.xc.dao.mapper.base.Common_Where_Clause"/>
+        </if>
+    </select>
+
+    <select id="selectNotesByCriterions" parameterType="java.util.HashMap" resultMap="noteResultMap">
+        select * from note
+        <if test="_parameter != null">
+            <include refid="com.xc.dao.mapper.base.Common_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+        <choose>
+            <when test="limit != null and start != null">limit #{start},#{limit}</when>
+            <when test="limit != null and start == null">limit #{limit}</when>
+        </choose>
+    </select>
+
+    <delete id="delete">
+        delete from note where id = #{id}
+    </delete>
 </mapper>

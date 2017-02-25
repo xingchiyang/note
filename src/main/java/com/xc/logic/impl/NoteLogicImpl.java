@@ -4,10 +4,16 @@ import com.xc.constant.NoteConstant;
 import com.xc.dao.NoteDao;
 import com.xc.entity.Note;
 import com.xc.logic.NoteLogic;
+import com.xc.util.Criterions;
 import com.xc.util.GenerateUUID;
+import com.xc.util.page.Pagination;
+import com.xc.util.page.SortConvert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -46,17 +52,41 @@ public class NoteLogicImpl implements NoteLogic {
 	public Note getNoteById(String id) {
 		return noteDao.selectNoteById(id);
 	}
-	//
-	//	@Override
-	//	public List<Note> getNotesList(String name, String dirId, Integer type, Integer page, Integer size, String sortKey,
-	//			Integer sortType) {
-	//		return null;
-	//	}
-	//
-	//	@Override
-	//	@Transactional
-	//	public void removeNoteByid(String id) {
-	//		noteDao.delete(id);
-	//	}
+
+	@Override
+	public Pagination<Note> getNotesList(String name, String dirId, Integer type, Integer page, Integer size, String sortKey,
+			Integer sortType) {
+		Criterions criterions = new Criterions();
+		Criterions.Criteria criteria = criterions.createCriteria();
+		if (!StringUtils.isEmpty(name)) {
+			String param = "%" + name + "%";
+			String nameClause = "name like ?";
+			criteria.andCustom(nameClause, param);
+		}
+		if (!StringUtils.isEmpty(dirId)) {
+			criteria.andColumnEqualTo("dir_id", dirId);
+		}
+		if (!StringUtils.isEmpty(type)) {
+			criteria.andColumnEqualTo("type", type);
+		}
+		Integer total = noteDao.countNotesByCriterions(criterions);
+		Pagination<Note> p = new Pagination<Note>(page, size, total);
+		criterions.setStart(p.getFirstResult());
+		criterions.setLimit(p.getPageSize());
+		if (total > 0) {
+			String orderClause = SortConvert.convert(sortKey, sortType, "create_time", -1);
+			criterions.setOrderByClause(orderClause);
+			p.setData(noteDao.selectNotesByCriterions(criterions));
+		} else {
+			p.setData(new ArrayList<>());
+		}
+		return p;
+	}
+
+	@Override
+	@Transactional
+	public void removeNoteByid(String id) {
+		noteDao.delete(id);
+	}
 
 }

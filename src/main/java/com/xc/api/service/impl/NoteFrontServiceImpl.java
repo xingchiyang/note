@@ -8,7 +8,9 @@ import com.xc.logic.NoteLogic;
 import com.xc.util.JsonUtil;
 import com.xc.util.RestReturnUtil;
 import com.xc.util.ValidateUtil;
+import com.xc.util.page.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -30,18 +32,18 @@ public class NoteFrontServiceImpl implements NoteFrontService {
 		return RestReturnUtil.toObject("id", noteLogic.createNote(note));
 	}
 
-	//	@PostMapping("/modify")
-	//	@Override
-	//	public String modifyNote(@RequestBody String jsonString) {
-	//		ValidateUtil.validateStrBlank(jsonString, "请求参数为空");
-	//		Note note = JSON.parseObject(jsonString, Note.class);
-	//		ValidateUtil.validateStrBlank(note.getId(), "笔记id不能为空");
-	//		ValidateUtil.validateStrBlank(note.getTitle(), "笔记title不能为空");
-	//		if (noteLogic.modifyNote(note)) {
-	//			return RestReturnUtil.toObject("id", note.getId());
-	//		}
-	//		return null;
-	//	}
+	@PostMapping("/modify")
+	@Override
+	public String modifyNote(@RequestBody String jsonString) {
+		ValidateUtil.validateStrBlank(jsonString, "请求参数为空");
+		Note note = JSON.parseObject(jsonString, Note.class);
+		ValidateUtil.validateStrBlank(note.getId(), "笔记id不能为空");
+		ValidateUtil.validateStrBlank(note.getTitle(), "笔记title不能为空");
+		if (noteLogic.modifyNote(note)) {
+			return RestReturnUtil.toObject("id", note.getId());
+		}
+		return null;
+	}
 
 	@GetMapping(value = "/get/{id}", consumes = "*/*")
 	@Override
@@ -50,19 +52,21 @@ public class NoteFrontServiceImpl implements NoteFrontService {
 		return JsonUtil.includePropToJson(note);
 	}
 
-	//	@GetMapping(value = "/query", consumes = "*/*")
-	//	@Override
-	//	public String getNotesList() {
-	//		List<Note> notesList = noteLogic.getNotesList(null, null, null, null, null, null, null);
-	//		return JsonUtil.includePropToJson(noteLogic);
-	//	}
-	//
-	//	@GetMapping(value = "/delete/{id}", consumes = "*/*")
-	//	@Override
-	//	public void removeNote(@PathVariable String id) {
-	//		if (StringUtils.isEmpty(id))
-	//			return;
-	//		noteLogic.removeNoteByid(id);
-	//	}
+	@GetMapping(value = "/query", consumes = "*/*")
+	@Override
+	public String getNotesList(@RequestParam("name") String name, @RequestParam("dirId") String dirId,
+			@RequestParam("type") Integer type, @RequestParam("page") Integer page, @RequestParam("size") Integer size,
+			@RequestParam("sortKey") String sortKey, @RequestParam("sortType") String sortType) {
+		Pagination<Note> notesList = noteLogic.getNotesList(null, null, null, null, null, null, null);
+		return JsonUtil.includePropToJson(notesList.formate());
+	}
+
+	@GetMapping(value = "/delete/{id}", consumes = "*/*")
+	@Override
+	public void removeNote(@PathVariable String id) {
+		if (StringUtils.isEmpty(id))
+			return;
+		noteLogic.removeNoteByid(id);
+	}
 
 }

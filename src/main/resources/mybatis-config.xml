@@ -5,5 +5,6 @@
 <configuration>
     <mappers>
         <mapper resource="mapper/NoteMapper.xml"/>
+        <mapper resource="mapper/BaseMapper.xml"/>
     </mappers>
 </configuration>
