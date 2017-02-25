@@ -16,5 +16,7 @@ public interface NoteLogic {
 	public Pagination<Note> getNotesList(String name, String dirId, Integer type, Integer page, Integer size, String sortKey,
 			Integer sortType);
 
-	public void removeNoteByid(String id);
+	public void removeNotes(String ids);
+
+	public void clearNotes(String ids);
 }

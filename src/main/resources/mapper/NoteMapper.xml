@@ -84,7 +84,11 @@
         </choose>
     </select>
 
-    <delete id="delete">
+    <delete id="clear">
         delete from note where id = #{id}
     </delete>
+
+    <update id="delete">
+        update note set status = 2 where id = #{id}
+    </update>
 </mapper>

@@ -54,8 +54,8 @@ public class NoteLogicImpl implements NoteLogic {
 	}
 
 	@Override
-	public Pagination<Note> getNotesList(String name, String dirId, Integer type, Integer page, Integer size, String sortKey,
-			Integer sortType) {
+	public Pagination<Note> getNotesList(String name, String dirId, Integer type, Integer page, Integer size,
+			String sortKey, Integer sortType) {
 		Criterions criterions = new Criterions();
 		Criterions.Criteria criteria = criterions.createCriteria();
 		if (!StringUtils.isEmpty(name)) {
@@ -85,8 +85,19 @@ public class NoteLogicImpl implements NoteLogic {
 
 	@Override
 	@Transactional
-	public void removeNoteByid(String id) {
-		noteDao.delete(id);
+	public void removeNotes(String ids) {
+		for (String id : ids.split(",")) {
+			noteDao.delete(id);
+		}
+	}
+
+	@Override
+	@Transactional
+	public void clearNotes(String ids) {
+		for (String id : ids.split(",")) {
+			noteDao.clear(id);
+		}
+
 	}
 
 }

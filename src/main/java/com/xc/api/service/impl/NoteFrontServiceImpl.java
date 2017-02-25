@@ -65,12 +65,20 @@ public class NoteFrontServiceImpl implements NoteFrontService {
 		return JsonUtil.includePropToJson(notesList.formate());
 	}
 
-	@GetMapping(value = "/delete/{id}", consumes = "*/*")
+	@GetMapping(value = "/delete/{ids}", consumes = "*/*")
 	@Override
-	public void removeNote(@PathVariable String id) {
-		if (StringUtils.isEmpty(id))
+	public void removeNote(@PathVariable String ids) {
+		if (StringUtils.isEmpty(ids))
 			return;
-		noteLogic.removeNoteByid(id);
+		noteLogic.removeNotes(ids);
+	}
+
+	@GetMapping(value = "/clear/{ids}", consumes = "*/*")
+	@Override
+	public void clearNote(@PathVariable String ids) {
+		if (StringUtils.isEmpty(ids))
+			return;
+		noteLogic.clearNotes(ids);
 	}
 
 }

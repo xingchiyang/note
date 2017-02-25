@@ -21,5 +21,7 @@ public interface NoteDao {
 
 	public List<Note> selectNotesByCriterions(Criterions criterions);
 
-	public void delete(String id);
+	public void delete(@Param("id") String id);
+
+	public void clear(@Param("id") String id);
 }

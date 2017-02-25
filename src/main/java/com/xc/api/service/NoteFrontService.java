@@ -14,4 +14,8 @@ public interface NoteFrontService {
 			String sortType);
 
 	public void removeNote(String id);
+
+	public void clearNote(String id);
+
+
 }
