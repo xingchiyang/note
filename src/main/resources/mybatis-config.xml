@@ -4,7 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <mappers>
-        <mapper resource="mapper/NoteMapper.xml"/>
         <mapper resource="mapper/BaseMapper.xml"/>
+        <mapper resource="mapper/NoteMapper.xml"/>
+        <mapper resource="mapper/DirectoryMapper.xml"/>
     </mappers>
 </configuration>

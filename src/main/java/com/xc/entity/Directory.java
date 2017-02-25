@@ -5,20 +5,20 @@ import java.util.Date;
 /**
  * Created by Administrator on 2017/02/22 0022.
  */
-public class DirInfo {
+public class Directory {
 	private String id;
 
 	private String name;
 
-	private String parentId; // 父类id
-
-	private String userId;
+	private String parentId; // 父类目录id
 
 	private Date createTime;
 
 	private Date modifyTime;
 
-	public DirInfo() {
+	private String userId;
+
+	public Directory() {
 	}
 
 	public String getUserId() {
