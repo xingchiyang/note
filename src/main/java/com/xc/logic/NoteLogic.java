@@ -19,4 +19,6 @@ public interface NoteLogic {
 	public void removeNotes(String ids);
 
 	public void clearNotes(String ids);
+
+	public void removeNotesByDirId(String dirId);
 }

@@ -24,4 +24,6 @@ public interface NoteDao {
 	public void delete(@Param("id") String id);
 
 	public void clear(@Param("id") String id);
+
+	public void deleteByDirId(@Param("dirId") String dirId);
 }

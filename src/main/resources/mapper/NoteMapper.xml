@@ -91,4 +91,8 @@
     <update id="delete">
         update note set status = 2 where id = #{id}
     </update>
+
+    <delete id="deleteByDirId">
+        delete from note where dir_id = #{dirId}
+    </delete>
 </mapper>

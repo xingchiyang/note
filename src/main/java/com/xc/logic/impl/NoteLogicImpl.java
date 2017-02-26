@@ -2,7 +2,9 @@ package com.xc.logic.impl;
 
 import com.xc.constant.NoteConstant;
 import com.xc.dao.NoteDao;
+import com.xc.entity.Directory;
 import com.xc.entity.Note;
+import com.xc.logic.DirectoryLogic;
 import com.xc.logic.NoteLogic;
 import com.xc.util.Criterions;
 import com.xc.util.GenerateUUID;
@@ -10,9 +12,9 @@ import com.xc.util.page.Pagination;
 import com.xc.util.page.SortConvert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -23,8 +25,14 @@ import java.util.Date;
 public class NoteLogicImpl implements NoteLogic {
 	@Autowired
 	private NoteDao noteDao;
+	@Autowired
+	private DirectoryLogic dirLogic;
 
 	public String createNote(Note note) {
+		Directory dir = dirLogic.getDirById(note.getDirId());
+		if (dir == null) {
+			note.setDirId(null); // 如果目录id
+		}
 		String id = GenerateUUID.getUUID32();
 		note.setId(id);
 		note.setStatus(NoteConstant.STATUS_NORMAL);
@@ -65,6 +73,8 @@ public class NoteLogicImpl implements NoteLogic {
 		}
 		if (!StringUtils.isEmpty(dirId)) {
 			criteria.andColumnEqualTo("dir_id", dirId);
+		} else {
+			criteria.andColumnIsNull("dir_id");
 		}
 		if (!StringUtils.isEmpty(type)) {
 			criteria.andColumnEqualTo("type", type);
@@ -98,6 +108,14 @@ public class NoteLogicImpl implements NoteLogic {
 			noteDao.clear(id);
 		}
 
+	}
+
+	@Override
+	@Transactional
+	public void removeNotesByDirId(String dirId) {
+		if (dirId == null)
+			return;
+		noteDao.deleteByDirId(dirId);
 	}
 
 }
