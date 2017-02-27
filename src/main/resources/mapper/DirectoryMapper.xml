@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xc.dao.DirectoryDao">
+    <resultMap id="dirResultMap" type="com.xc.entity.Directory">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
+        <result property="userId" column="user_id"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.xc.entity.Directory">
+      insert into dir(id,name,parent_id,create_time,modify_time,user_id)
+      values (
+        #{id},#{name},#{parentId},#{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},#{userId}
+      )
+    </insert>
+
+    <update id="update" parameterType="com.xc.entity.Directory">
+        UPDATE dir
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime, jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime, jdbcType=TIMESTAMP},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectDirById" resultMap="dirResultMap">
+        select * from dir where id = #{id}
+    </select>
+
+    <select id="selectDirsByParentId" resultMap="dirResultMap">
+        select * from dir
+        where
+        <if test="parentId == null">
+            parent_id is null
+        </if>
+        <if test="parentId != null">
+            parent_id = #{parentId}
+        </if>
+    </select>
+
+    <delete id="delete">
+        delete from dir where id = #{id}
+    </delete>
+</mapper>
