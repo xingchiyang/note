@@ -11,7 +11,7 @@ public interface NoteFrontService {
 	public String getNote(String id);
 
 	public String getNotesList(String name, String dirId, Integer type, Integer page, Integer size, String sortKey,
-			String sortType);
+			Integer sortType);
 
 	public void removeNote(String id);
 

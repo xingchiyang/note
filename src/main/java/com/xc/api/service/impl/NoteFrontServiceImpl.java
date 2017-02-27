@@ -60,8 +60,8 @@ public class NoteFrontServiceImpl implements NoteFrontService {
 			@RequestParam(value = "page", required = false) Integer page,
 			@RequestParam(value = "size", required = false) Integer size,
 			@RequestParam(value = "sortKey", required = false) String sortKey,
-			@RequestParam(value = "sortType", required = false) String sortType) {
-		Pagination<Note> notesList = noteLogic.getNotesList(null, null, null, null, null, null, null);
+			@RequestParam(value = "sortType", required = false) Integer sortType) {
+		Pagination<Note> notesList = noteLogic.getNotesList(name, dirId, type, page, size, sortKey, sortType);
 		return JsonUtil.includePropToJson(notesList.formate());
 	}
 
