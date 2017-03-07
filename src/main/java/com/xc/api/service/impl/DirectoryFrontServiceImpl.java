@@ -16,9 +16,9 @@ import java.util.List;
 
 /**
  * Created by Administrator on 2017/02/22 0022.
- */
-@RestController
+ */@RestController
 @RequestMapping(value = "/api/v1/dir", produces = Constant.MEDIA_TYPE, consumes = Constant.MEDIA_TYPE)
+
 public class DirectoryFrontServiceImpl implements DirectoryFrontService {
 	@Autowired
 	private DirectoryLogic directoryLogic;
