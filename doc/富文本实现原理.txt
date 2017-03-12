@@ -18,3 +18,5 @@ QQ、Foxmail客户端邮箱，将附件保存在本地，所以下载附件时�
 富文本框架参考
 wangeditor：http://www.kancloud.cn/wangfupeng/wangeditor2
 百度UEditor：http://fex.baidu.com/ueditor
+
+jstree：http://www.cnblogs.com/luozhihao/p/4679050.html
