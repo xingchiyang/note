@@ -45,6 +45,7 @@ public class FileFrontServiceImpl implements FileFrontService {
 				JSONObject object = new JSONObject();
 				object.put("id", dir.getId());
 				object.put("text", dir.getName());
+				object.put("icon", "./images/dir.png");
 				object.put("children", true);
 				ret.add(object);
 			}
@@ -54,6 +55,7 @@ public class FileFrontServiceImpl implements FileFrontService {
 				JSONObject object = new JSONObject();
 				object.put("id", note.getId());
 				object.put("text", note.getTitle());
+				object.put("icon", "./images/file.png");
 				ret.add(object);
 			}
 		}
