@@ -47,6 +47,9 @@ public class FileFrontServiceImpl implements FileFrontService {
 				object.put("text", dir.getName());
 				object.put("icon", "./images/dir.png");
 				object.put("children", true);
+				JSONObject aAttr = new JSONObject();
+				aAttr.put("isDir", true);
+				object.put("a_attr", aAttr);
 				ret.add(object);
 			}
 		}
@@ -56,6 +59,9 @@ public class FileFrontServiceImpl implements FileFrontService {
 				object.put("id", note.getId());
 				object.put("text", note.getTitle());
 				object.put("icon", "./images/file.png");
+				JSONObject aAttr = new JSONObject();
+				aAttr.put("isDir", false);
+				object.put("a_attr", aAttr);
 				ret.add(object);
 			}
 		}
