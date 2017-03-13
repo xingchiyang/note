@@ -32,6 +32,7 @@ public class FileFrontServiceImpl implements FileFrontService {
 	@Override
 	@GetMapping(value = "/query", consumes = "*/*")
 	public String getFileByDirId(@RequestParam(value = "id", required = false) String id) {
+		// 兼容jstree传过来的根节点id
 		if ("#".equals(id)) {
 			id = null;
 		}
@@ -64,6 +65,19 @@ public class FileFrontServiceImpl implements FileFrontService {
 				object.put("a_attr", aAttr);
 				ret.add(object);
 			}
+		}
+		if (id == null) {
+			JSONArray root = new JSONArray();
+			JSONObject rootOne = new JSONObject();
+			root.add(rootOne);
+			rootOne.put("id", null);
+			rootOne.put("text", "我的文件");
+			rootOne.put("icon", "./images/dir.png");
+			rootOne.put("children", ret);
+			JSONObject aAttr = new JSONObject();
+			aAttr.put("isDir", true);
+			rootOne.put("a_attr", aAttr);
+			return JsonUtil.includePropToJson(root);
 		}
 		return JsonUtil.includePropToJson(ret);
 	}
