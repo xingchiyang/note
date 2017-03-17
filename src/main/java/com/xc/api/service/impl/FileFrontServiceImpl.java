@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.xc.api.service.FileFrontService;
 import com.xc.constant.Constant;
+import com.xc.constant.NoteConstant;
 import com.xc.entity.Directory;
 import com.xc.entity.Note;
 import com.xc.logic.DirectoryLogic;
@@ -37,7 +38,8 @@ public class FileFrontServiceImpl implements FileFrontService {
 			id = null;
 		}
 		List<Directory> dirs = dirLogic.getDirsByParentId(id);
-		Pagination<Note> pagination = noteLogic.getNotesList(null, id, null, 1, Integer.MAX_VALUE, null, null);
+		Pagination<Note> pagination = noteLogic
+				.getNotesList(null, id, null, 1, NoteConstant.STATUS_NORMAL, Integer.MAX_VALUE, null, null);
 		List<Note> notes = pagination.getData();
 
 		JSONArray ret = new JSONArray();

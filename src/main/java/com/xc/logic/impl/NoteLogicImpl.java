@@ -62,8 +62,8 @@ public class NoteLogicImpl implements NoteLogic {
 	}
 
 	@Override
-	public Pagination<Note> getNotesList(String name, String dirId, Integer type, Integer page, Integer size,
-			String sortKey, Integer sortType) {
+	public Pagination<Note> getNotesList(String name, String dirId, Integer type, Integer status, Integer page,
+			Integer size, String sortKey, Integer sortType) {
 		Criterions criterions = new Criterions();
 		Criterions.Criteria criteria = criterions.createCriteria();
 		if (!StringUtils.isEmpty(name)) {
@@ -78,6 +78,9 @@ public class NoteLogicImpl implements NoteLogic {
 		}
 		if (!StringUtils.isEmpty(type)) {
 			criteria.andColumnEqualTo("type", type);
+		}
+		if (!StringUtils.isEmpty(status)) {
+			criteria.andColumnEqualTo("status", status);
 		}
 		Integer total = noteDao.countNotesByCriterions(criterions);
 		Pagination<Note> p = new Pagination<Note>(page, size, total);

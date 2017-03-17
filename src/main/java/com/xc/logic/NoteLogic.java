@@ -13,7 +13,7 @@ public interface NoteLogic {
 
 	public Note getNoteById(String id);
 
-	public Pagination<Note> getNotesList(String name, String dirId, Integer type, Integer page, Integer size, String sortKey,
+	public Pagination<Note> getNotesList(String name, String dirId, Integer type, Integer status, Integer page, Integer size, String sortKey,
 			Integer sortType);
 
 	public void removeNotes(String ids);

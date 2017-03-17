@@ -15,8 +15,5 @@
 
 QQ、Foxmail客户端邮箱，将附件保存在本地，所以下载附件时会先从本地加载附件内容。
 
-富文本框架参考
-wangeditor：http://www.kancloud.cn/wangfupeng/wangeditor2
-百度UEditor：http://fex.baidu.com/ueditor
-
-jstree：http://www.cnblogs.com/luozhihao/p/4679050.html
+参考资料：
+【图片上传】http://blog.csdn.net/li6151770/article/details/52782150?locationNum=1&fps=1

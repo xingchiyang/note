@@ -5,4 +5,5 @@ package com.xc.constant;
  */
 public class Constant {
 	public static final String MEDIA_TYPE = "application/json;charset=utf-8";
+	public static final String MEDIA_TYPE_All = "*/*";
 }

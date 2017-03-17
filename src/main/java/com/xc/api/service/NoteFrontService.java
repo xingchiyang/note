@@ -10,7 +10,7 @@ public interface NoteFrontService {
 
 	public String getNote(String id);
 
-	public String getNotesList(String name, String dirId, Integer type, Integer page, Integer size, String sortKey,
+	public String getNotesList(String name, String dirId, Integer type, Integer status, Integer page, Integer size, String sortKey,
 			Integer sortType);
 
 	public void removeNote(String id);
