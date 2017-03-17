@@ -37,6 +37,7 @@ public class FileFrontServiceImpl implements FileFrontService {
 		if ("#".equals(id)) {
 			id = null;
 		}
+		Directory directory = dirLogic.getDirById(id);
 		List<Directory> dirs = dirLogic.getDirsByParentId(id);
 		Pagination<Note> pagination = noteLogic
 				.getNotesList(null, id, null, 1, NoteConstant.STATUS_NORMAL, Integer.MAX_VALUE, null, null);
@@ -68,19 +69,14 @@ public class FileFrontServiceImpl implements FileFrontService {
 				ret.add(object);
 			}
 		}
-		if (id == null) {
-			JSONArray root = new JSONArray();
-			JSONObject rootOne = new JSONObject();
-			root.add(rootOne);
-			rootOne.put("id", null);
-			rootOne.put("text", "我的文件");
-			rootOne.put("icon", "./images/dir.png");
-			rootOne.put("children", ret);
-			JSONObject aAttr = new JSONObject();
-			aAttr.put("isDir", true);
-			rootOne.put("a_attr", aAttr);
-			return JsonUtil.includePropToJson(root);
-		}
-		return JsonUtil.includePropToJson(ret);
+		JSONObject root = new JSONObject();
+		root.put("id", id);
+		root.put("text", id == null ? "我的文件" : (directory != null ? directory.getName() : ""));
+		root.put("icon", "./images/dir.png");
+		root.put("children", ret);
+		JSONObject aAttr = new JSONObject();
+		aAttr.put("isDir", true);
+		root.put("a_attr", aAttr);
+		return JsonUtil.includePropToJson(root);
 	}
 }

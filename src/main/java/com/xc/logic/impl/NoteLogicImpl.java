@@ -36,6 +36,7 @@ public class NoteLogicImpl implements NoteLogic {
 		String id = GenerateUUID.getUUID32();
 		note.setId(id);
 		note.setStatus(NoteConstant.STATUS_NORMAL);
+		note.setDirId(note.getDirId());
 		Date now = new Date();
 		note.setCreateTime(now);
 		note.setModifyTime(now);
