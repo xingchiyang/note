@@ -15,7 +15,7 @@
     <insert id="insert" parameterType="com.xc.entity.Directory">
       insert into dir(id,name,parent_id,create_time,modify_time,user_id)
       values (
-        #{id},#{`name`},#{parentId},#{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},#{userId}
+        #{id},#{name},#{parentId},#{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},#{userId}
       )
     </insert>
 
