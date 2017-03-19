@@ -49,7 +49,7 @@ public class FileFrontServiceImpl implements FileFrontService {
 				JSONObject object = new JSONObject();
 				object.put("id", dir.getId());
 				object.put("text", dir.getName());
-				object.put("icon", "./images/dir.png");
+				object.put("icon", "../../images/dir.png");
 				object.put("children", true);
 				JSONObject aAttr = new JSONObject();
 				aAttr.put("isDir", true);
@@ -62,7 +62,7 @@ public class FileFrontServiceImpl implements FileFrontService {
 				JSONObject object = new JSONObject();
 				object.put("id", note.getId());
 				object.put("text", note.getTitle());
-				object.put("icon", "./images/file.png");
+				object.put("icon", "../../images/file.png");
 				JSONObject aAttr = new JSONObject();
 				aAttr.put("isDir", false);
 				object.put("a_attr", aAttr);
@@ -72,7 +72,10 @@ public class FileFrontServiceImpl implements FileFrontService {
 		JSONObject root = new JSONObject();
 		root.put("id", id);
 		root.put("text", id == null ? "我的文件" : (directory != null ? directory.getName() : ""));
-		root.put("icon", "./images/dir.png");
+		root.put("icon", "../../images/dir.png");
+		JSONObject state = new JSONObject();
+		state.put("opened", true);
+		root.put("state", state);
 		root.put("children", ret);
 		JSONObject aAttr = new JSONObject();
 		aAttr.put("isDir", true);
