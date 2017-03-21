@@ -5,10 +5,9 @@ import com.xc.api.service.UploadFrontService;
 import com.xc.constant.Constant;
 import com.xc.util.GenerateUUID;
 import com.xc.util.JsonUtil;
-import org.apache.commons.fileupload.FileItemIterator;
-import org.apache.commons.fileupload.FileItemStream;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
@@ -33,36 +32,32 @@ public class UploadFrontServiceImpl implements UploadFrontService {
 		return JsonUtil.includePropToJson(ret);
 	}
 
-	private String saveFile(HttpServletRequest request) {
-		ServletFileUpload upload = new ServletFileUpload();
+	private String saveFile(HttpServletRequest req) {
+		MultipartHttpServletRequest request = (MultipartHttpServletRequest) req;
 		File desFile = null;
 		InputStream in = null;
 		OutputStream out = null;
 		String fileDataFileName = "";
+		String fileFullPath = "";
 		try {
-			FileItemIterator fileIterator = upload.getItemIterator(request);
-			while (fileIterator.hasNext()) {
-				FileItemStream item = fileIterator.next();
-				if (FILE_NAME.equals(item.getFieldName())) {
-					String fileName = item.getName();
-					in = item.openStream();
+			MultipartFile file = request.getFile(FILE_NAME);
+			in = file.getInputStream();
 
-					String saveRealFilePath = request.getServletContext().getRealPath("/upload");
-					File fileDir = new File(saveRealFilePath);
-					if (!fileDir.exists()) {
-						fileDir.mkdirs();
-					}
-					fileDataFileName = GenerateUUID.getUUID32();
-					desFile = new File(saveRealFilePath + "/" + fileDataFileName);
+			String saveRealFilePath = request.getServletContext().getRealPath("/upload");
+			File fileDir = new File(saveRealFilePath);
+			if (!fileDir.exists()) {
+				fileDir.mkdirs();
+			}
+			fileDataFileName = GenerateUUID.getUUID32();
+			fileFullPath = saveRealFilePath + "/" + fileDataFileName;
+			desFile = new File(fileFullPath);
 
-					out = new BufferedOutputStream(new FileOutputStream(desFile));
-					int size = 1024;
-					byte[] data = new byte[size];
-					int len = 0;
-					while ((len = in.read(data)) != -1) {
-						out.write(data, 0, len);
-					}
-				}
+			out = new BufferedOutputStream(new FileOutputStream(desFile));
+			int size = 1024;
+			byte[] data = new byte[size];
+			int len = 0;
+			while ((len = in.read(data)) != -1) {
+				out.write(data, 0, len);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -77,7 +72,7 @@ public class UploadFrontServiceImpl implements UploadFrontService {
 			} catch (IOException e) {
 			}
 		}
-		return fileDataFileName;
+		return fileFullPath;
 	}
 
 	@Override
