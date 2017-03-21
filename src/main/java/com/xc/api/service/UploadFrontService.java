@@ -7,4 +7,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface UploadFrontService {
 	public Object uploadImg(HttpServletRequest request);
+
+	public Object getImg(String id);
+
 }
