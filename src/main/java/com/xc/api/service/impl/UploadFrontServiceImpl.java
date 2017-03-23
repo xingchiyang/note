@@ -38,19 +38,18 @@ public class UploadFrontServiceImpl implements UploadFrontService {
 		InputStream in = null;
 		OutputStream out = null;
 		String fileDataFileName = "";
-		String fileFullPath = "";
 		try {
 			MultipartFile file = request.getFile(FILE_NAME);
 			in = file.getInputStream();
 
-			String saveRealFilePath = request.getServletContext().getRealPath("/upload");
+			String saveRealFilePath = System.getProperty("user.dir") + "/upload";
+			System.out.println(saveRealFilePath);
 			File fileDir = new File(saveRealFilePath);
 			if (!fileDir.exists()) {
 				fileDir.mkdirs();
 			}
 			fileDataFileName = GenerateUUID.getUUID32();
-			fileFullPath = saveRealFilePath + "/" + fileDataFileName;
-			desFile = new File(fileFullPath);
+			desFile = new File(saveRealFilePath + "/" + fileDataFileName);
 
 			out = new BufferedOutputStream(new FileOutputStream(desFile));
 			int size = 1024;
@@ -72,7 +71,7 @@ public class UploadFrontServiceImpl implements UploadFrontService {
 			} catch (IOException e) {
 			}
 		}
-		return fileFullPath;
+		return fileDataFileName;
 	}
 
 	@Override

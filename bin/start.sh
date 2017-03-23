@@ -1,0 +1,1 @@
+java -jar ./../module/note-0.0.1-SNAPSHOT.jar
