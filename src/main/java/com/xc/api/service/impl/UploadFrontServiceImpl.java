@@ -19,7 +19,7 @@ import java.io.*;
 @RequestMapping(value = "/api/v1/upload", produces = Constant.MEDIA_TYPE, consumes = Constant.MEDIA_TYPE_All)
 public class UploadFrontServiceImpl implements UploadFrontService {
 
-	private static final String FILE_NAME = "upload_file";
+	private static final String FILE_NAME = "img";
 
 	@Override
 	@PostMapping("/img")
@@ -37,19 +37,21 @@ public class UploadFrontServiceImpl implements UploadFrontService {
 		File desFile = null;
 		InputStream in = null;
 		OutputStream out = null;
-		String fileDataFileName = "";
+		String fileKey = "";
 		try {
 			MultipartFile file = request.getFile(FILE_NAME);
+			String fileName = file.getOriginalFilename();
+			String suffix = fileName.substring(fileName.lastIndexOf("."));
 			in = file.getInputStream();
 
-			String saveRealFilePath = System.getProperty("user.dir") + "/upload";
+			String saveRealFilePath = System.getProperty("user.dir") + "/../upload/img";
 			System.out.println(saveRealFilePath);
 			File fileDir = new File(saveRealFilePath);
 			if (!fileDir.exists()) {
 				fileDir.mkdirs();
 			}
-			fileDataFileName = GenerateUUID.getUUID32();
-			desFile = new File(saveRealFilePath + "/" + fileDataFileName);
+			fileKey = GenerateUUID.getUUID32();
+			desFile = new File(saveRealFilePath + "/" + fileKey + suffix);
 
 			out = new BufferedOutputStream(new FileOutputStream(desFile));
 			int size = 1024;
@@ -71,13 +73,13 @@ public class UploadFrontServiceImpl implements UploadFrontService {
 			} catch (IOException e) {
 			}
 		}
-		return fileDataFileName;
+		return req.getRequestURL() + "/get/" + fileKey;
 	}
 
 	@Override
-	@GetMapping("/img/get/{id}")
-	public Object getImg(@PathVariable String id) {
-		return null;
+	@GetMapping(value = "/img/get/{key}", produces = Constant.MEDIA_TYPE, consumes = Constant.MEDIA_TYPE_All)
+	public Object getImg(@PathVariable String key) {
+		return "";
 	}
 
 }

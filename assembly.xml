@@ -12,8 +12,7 @@
 		<fileSet>
 			<directory>bin</directory>
 			<includes>
-				<include>start.sh</include>
-				<include>stop.sh</include>
+				<include>*.*</include>
 			</includes>
 			<lineEnding>unix</lineEnding>
 			<fileMode>0755</fileMode>
