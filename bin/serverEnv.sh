@@ -13,9 +13,9 @@ LANG=en_US.UTF-8
 #set classpath
 CLASS_PATH="$BASE_DIR/module/*:$BASE_DIR/lib/*"
 #set logback
-LOGBACK_CONFIGFILE="$BASE_DIR/conf/logback.xml"
+#LOGBACK_CONFIGFILE="$BASE_DIR/conf/logback.xml"
 #set mainclass
-MAIN_CLASS="uyun.boltdog.api.rest.Start"
+#MAIN_CLASS="uyun.boltdog.api.rest.Start"
 #start jvm
 if [ -z "$JAVA_OPTS" ]; then
 	JAVA_OPTS="-Xms128m -Xmx1024m"
