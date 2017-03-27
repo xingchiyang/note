@@ -5,11 +5,13 @@ import com.xc.api.service.UploadFrontService;
 import com.xc.constant.Constant;
 import com.xc.util.GenerateUUID;
 import com.xc.util.JsonUtil;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 
 /**
@@ -19,20 +21,25 @@ import java.io.*;
 @RequestMapping(value = "/api/v1/upload", produces = Constant.MEDIA_TYPE, consumes = Constant.MEDIA_TYPE_All)
 public class UploadFrontServiceImpl implements UploadFrontService {
 
-	private static final String FILE_NAME = "img";
+	private static final String FILE_NAME = "file";
+	private static final String IMG_DIR = System.getProperty("user.dir") + "/../upload/img";
 
 	@Override
 	@PostMapping("/img")
 	public Object uploadImg(HttpServletRequest request) {
-		String fileName = saveFile(request);
+		FileInfo fileInfo = saveFile(request);
 		JSONObject ret = new JSONObject();
-		ret.put("success", true);
+		ret.put("code", 0);
 		ret.put("msg", "上次成功");
-		ret.put("file_path", fileName);
+		JSONObject data = new JSONObject();
+		data.put("src", fileInfo.getSrc());
+		data.put("title", fileInfo.getName());
+		ret.put("data", data);
 		return JsonUtil.includePropToJson(ret);
 	}
 
-	private String saveFile(HttpServletRequest req) {
+	private FileInfo saveFile(HttpServletRequest req) {
+		FileInfo fileInfo = new FileInfo();
 		MultipartHttpServletRequest request = (MultipartHttpServletRequest) req;
 		File desFile = null;
 		InputStream in = null;
@@ -41,17 +48,15 @@ public class UploadFrontServiceImpl implements UploadFrontService {
 		try {
 			MultipartFile file = request.getFile(FILE_NAME);
 			String fileName = file.getOriginalFilename();
-			String suffix = fileName.substring(fileName.lastIndexOf("."));
+			fileInfo.setName(fileName);
 			in = file.getInputStream();
 
-			String saveRealFilePath = System.getProperty("user.dir") + "/../upload/img";
-			System.out.println(saveRealFilePath);
-			File fileDir = new File(saveRealFilePath);
+			File fileDir = new File(IMG_DIR);
 			if (!fileDir.exists()) {
 				fileDir.mkdirs();
 			}
 			fileKey = GenerateUUID.getUUID32();
-			desFile = new File(saveRealFilePath + "/" + fileKey + suffix);
+			desFile = new File(IMG_DIR + "/" + fileKey);
 
 			out = new BufferedOutputStream(new FileOutputStream(desFile));
 			int size = 1024;
@@ -73,13 +78,63 @@ public class UploadFrontServiceImpl implements UploadFrontService {
 			} catch (IOException e) {
 			}
 		}
-		return req.getRequestURL() + "/get/" + fileKey;
+		fileInfo.setSrc(req.getContextPath() + "/api/v1/upload/img/get/" + fileKey);
+		return fileInfo;
 	}
 
 	@Override
 	@GetMapping(value = "/img/get/{key}", produces = Constant.MEDIA_TYPE, consumes = Constant.MEDIA_TYPE_All)
-	public Object getImg(@PathVariable String key) {
+	public Object getImg(@PathVariable String key, HttpServletResponse res) {
+		if (StringUtils.isEmpty(key)) {
+			return "";
+		}
+		String sourceFile = IMG_DIR + "/" + key;
+		InputStream in = null;
+		OutputStream out = null;
+		try {
+			in = new BufferedInputStream(new FileInputStream(new File(sourceFile)));
+			out = res.getOutputStream();
+			int size = 1024;
+			byte[] buffer = new byte[size];
+			int len = 0;
+			while ((len = in.read(buffer)) != -1) {
+				out.write(buffer, 0, len);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (in != null) {
+					in.close();
+				}
+				if (out != null) {
+					out.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		return "";
 	}
 
+	class FileInfo {
+		private String src;
+		private String name;
+
+		public String getSrc() {
+			return src;
+		}
+
+		public void setSrc(String src) {
+			this.src = src;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+	}
 }
