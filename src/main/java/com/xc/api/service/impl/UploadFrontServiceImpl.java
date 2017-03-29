@@ -21,12 +21,13 @@ import java.io.*;
 @RequestMapping(value = "/api/v1/upload", produces = Constant.MEDIA_TYPE, consumes = Constant.MEDIA_TYPE_All)
 public class UploadFrontServiceImpl implements UploadFrontService {
 
-	private static final String FILE_NAME = "file";
-	private static final String IMG_DIR = System.getProperty("user.dir") + "/../upload/img";
+	private static final String FILE = "file";
+
+	private static final String FILE_DIR = System.getProperty("user.dir") + "/../upload";
 
 	@Override
-	@PostMapping("/img")
-	public Object uploadImg(HttpServletRequest request) {
+	@PostMapping("/file")
+	public Object uploadFile(HttpServletRequest request) {
 		FileInfo fileInfo = saveFile(request);
 		JSONObject ret = new JSONObject();
 		ret.put("code", 0);
@@ -34,6 +35,7 @@ public class UploadFrontServiceImpl implements UploadFrontService {
 		JSONObject data = new JSONObject();
 		data.put("src", fileInfo.getSrc());
 		data.put("title", fileInfo.getName());
+		data.put("id", fileInfo.getId());
 		ret.put("data", data);
 		return JsonUtil.includePropToJson(ret);
 	}
@@ -46,17 +48,18 @@ public class UploadFrontServiceImpl implements UploadFrontService {
 		OutputStream out = null;
 		String fileKey = "";
 		try {
-			MultipartFile file = request.getFile(FILE_NAME);
+			MultipartFile file = request.getFile(FILE);
 			String fileName = file.getOriginalFilename();
 			fileInfo.setName(fileName);
 			in = file.getInputStream();
 
-			File fileDir = new File(IMG_DIR);
+			File fileDir = new File(FILE_DIR);
 			if (!fileDir.exists()) {
 				fileDir.mkdirs();
 			}
 			fileKey = GenerateUUID.getUUID32();
-			desFile = new File(IMG_DIR + "/" + fileKey);
+			fileInfo.setId(fileKey);
+			desFile = new File(FILE_DIR + "/" + fileKey);
 
 			out = new BufferedOutputStream(new FileOutputStream(desFile));
 			int size = 1024;
@@ -78,17 +81,17 @@ public class UploadFrontServiceImpl implements UploadFrontService {
 			} catch (IOException e) {
 			}
 		}
-		fileInfo.setSrc(req.getContextPath() + "/api/v1/upload/img/get/" + fileKey);
+		fileInfo.setSrc(req.getContextPath() + "/api/v1/upload/file/get/" + fileKey);
 		return fileInfo;
 	}
 
 	@Override
-	@GetMapping(value = "/img/get/{key}", produces = Constant.MEDIA_TYPE, consumes = Constant.MEDIA_TYPE_All)
+	@GetMapping(value = "/file/get/{key}", produces = Constant.MEDIA_TYPE, consumes = Constant.MEDIA_TYPE_All)
 	public Object getImg(@PathVariable String key, HttpServletResponse res) {
 		if (StringUtils.isEmpty(key)) {
 			return "";
 		}
-		String sourceFile = IMG_DIR + "/" + key;
+		String sourceFile = FILE_DIR + "/" + key;
 		InputStream in = null;
 		OutputStream out = null;
 		try {
@@ -118,8 +121,17 @@ public class UploadFrontServiceImpl implements UploadFrontService {
 	}
 
 	class FileInfo {
+		private String id;
 		private String src;
 		private String name;
+
+		public String getId() {
+			return id;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
 
 		public String getSrc() {
 			return src;
