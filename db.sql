@@ -42,7 +42,7 @@ CREATE TABLE `note` (
   `title` varchar(255) NOT NULL,
   `content` longtext,
   `dir_id` varchar(255) DEFAULT NULL,
-  `path` varchar(255) DEFAULT NULL,
+  `attach` text,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status` tinyint(4) NOT NULL,

@@ -9,7 +9,7 @@
         <result property="title" column="title"/>
         <result property="content" column="content"/>
         <result property="type" column="type"/>
-        <result property="path" column="path"/>
+        <result property="attach" column="attach" jdbcType="LONGVARCHAR"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
         <result property="status" column="status"/>
@@ -17,9 +17,9 @@
     </resultMap>
 
     <insert id="insert" parameterType="com.xc.entity.Note">
-      insert into note(id,title,content,dir_id,path,create_time,modify_time,type,status,user_id)
+      insert into note(id,title,content,dir_id,attach,create_time,modify_time,type,status,user_id)
       values (
-        #{id},#{title},#{content},#{dirId},#{path},#{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},#{type},#{status},#{userId}
+        #{id},#{title},#{content},#{dirId},#{attach,jdbcType=LONGVARCHAR},#{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},#{type},#{status},#{userId}
       )
     </insert>
     <update id="update" parameterType="com.xc.entity.Note">
@@ -37,8 +37,8 @@
             <if test="type != null">
                 `type` = #{type},
             </if>
-            <if test="path != null">
-                path = #{path},
+            <if test="attach != null">
+                attach = #{attach,jdbcType=LONGVARCHAR},
             </if>
             <if test="createTime != null">
                 create_time = #{createTime, jdbcType=TIMESTAMP},

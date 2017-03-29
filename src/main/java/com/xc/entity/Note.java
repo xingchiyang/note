@@ -1,6 +1,7 @@
 package com.xc.entity;
 
-import javax.persistence.Column;
+import com.alibaba.fastjson.JSONArray;
+
 import java.util.Date;
 
 /**
@@ -17,7 +18,7 @@ public class Note {
 
 	private Integer type; // 笔记类型，markdown、常规笔记
 
-	private String path; // 笔记所在系统文件中的目录
+	private JSONArray attach; // 笔记所在系统文件中的目录
 
 	private Date createTime;
 
@@ -102,11 +103,11 @@ public class Note {
 		this.type = type;
 	}
 
-	public String getPath() {
-		return path;
+	public JSONArray getAttach() {
+		return attach;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
+	public void setAttach(JSONArray attach) {
+		this.attach = attach;
 	}
 }
