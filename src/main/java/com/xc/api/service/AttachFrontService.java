@@ -6,10 +6,12 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Created by Administrator on 2017/03/07 0007.
  */
-public interface UploadFrontService {
+public interface AttachFrontService {
 
 	public Object uploadFile(HttpServletRequest request);
 
-	public Object getImg(String id, HttpServletResponse res);
+	public Object getFile(String id, HttpServletResponse res);
+
+	public Object removeFile(String id);
 
 }

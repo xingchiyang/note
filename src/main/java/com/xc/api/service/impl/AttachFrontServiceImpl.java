@@ -1,7 +1,7 @@
 package com.xc.api.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.xc.api.service.UploadFrontService;
+import com.xc.api.service.AttachFrontService;
 import com.xc.constant.Constant;
 import com.xc.util.GenerateUUID;
 import com.xc.util.JsonUtil;
@@ -18,15 +18,15 @@ import java.io.*;
  * Created by Administrator on 2017/03/07 0007.
  */
 @RestController
-@RequestMapping(value = "/api/v1/upload", produces = Constant.MEDIA_TYPE, consumes = Constant.MEDIA_TYPE_All)
-public class UploadFrontServiceImpl implements UploadFrontService {
+@RequestMapping(value = "/api/v1/attach", produces = Constant.MEDIA_TYPE, consumes = Constant.MEDIA_TYPE_All)
+public class AttachFrontServiceImpl implements AttachFrontService {
 
 	private static final String FILE = "file";
 
 	private static final String FILE_DIR = System.getProperty("user.dir") + "/../upload";
 
 	@Override
-	@PostMapping("/file")
+	@PostMapping("/upload")
 	public Object uploadFile(HttpServletRequest request) {
 		FileInfo fileInfo = saveFile(request);
 		JSONObject ret = new JSONObject();
@@ -81,15 +81,15 @@ public class UploadFrontServiceImpl implements UploadFrontService {
 			} catch (IOException e) {
 			}
 		}
-		fileInfo.setSrc(req.getContextPath() + "/api/v1/upload/file/get/" + fileKey);
+		fileInfo.setSrc(req.getContextPath() + "/api/v1/attach/get/" + fileKey);
 		return fileInfo;
 	}
 
 	@Override
-	@GetMapping(value = "/file/get/{key}", produces = Constant.MEDIA_TYPE, consumes = Constant.MEDIA_TYPE_All)
-	public Object getImg(@PathVariable String key, HttpServletResponse res) {
+	@GetMapping("/get/{key}")
+	public Object getFile(@PathVariable String key, HttpServletResponse res) {
 		if (StringUtils.isEmpty(key)) {
-			return "";
+			return JsonUtil.includePropToJson(null);
 		}
 		String sourceFile = FILE_DIR + "/" + key;
 		InputStream in = null;
@@ -117,7 +117,20 @@ public class UploadFrontServiceImpl implements UploadFrontService {
 				e.printStackTrace();
 			}
 		}
-		return "";
+		return JsonUtil.includePropToJson(null);
+	}
+
+	@Override
+	@GetMapping("/remove/{key}")
+	public Object removeFile(@PathVariable String key) {
+		if (StringUtils.isEmpty(key)) {
+			return JsonUtil.includePropToJson(null);
+		}
+		File file = new File(FILE_DIR + "/" + key);
+		if (file.exists()) {
+			file.delete();
+		}
+		return JsonUtil.includePropToJson(null);
 	}
 
 	class FileInfo {
