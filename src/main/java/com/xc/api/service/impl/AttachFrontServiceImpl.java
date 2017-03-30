@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URLEncoder;
 
 /**
  * Created by Administrator on 2017/03/07 0007.
@@ -47,9 +48,10 @@ public class AttachFrontServiceImpl implements AttachFrontService {
 		InputStream in = null;
 		OutputStream out = null;
 		String fileKey = "";
+		String fileName = "";
 		try {
 			MultipartFile file = request.getFile(FILE);
-			String fileName = file.getOriginalFilename();
+			fileName = file.getOriginalFilename();
 			fileInfo.setName(fileName);
 			in = file.getInputStream();
 
@@ -81,20 +83,23 @@ public class AttachFrontServiceImpl implements AttachFrontService {
 			} catch (IOException e) {
 			}
 		}
-		fileInfo.setSrc(req.getContextPath() + "/api/v1/attach/get/" + fileKey);
+		fileInfo.setSrc(req.getContextPath() + "/api/v1/attach/get?fileKey=" + fileKey + "&fileName=" + fileName);
 		return fileInfo;
 	}
 
 	@Override
-	@GetMapping("/get/{key}")
-	public Object getFile(@PathVariable String key, HttpServletResponse res) {
-		if (StringUtils.isEmpty(key)) {
+	@GetMapping("/get")
+	public Object getFile(@RequestParam("fileKey") String fileKey, @RequestParam("fileName") String fileName, HttpServletResponse res) {
+		if (StringUtils.isEmpty(fileKey)) {
 			return JsonUtil.includePropToJson(null);
 		}
-		String sourceFile = FILE_DIR + "/" + key;
+		String sourceFile = FILE_DIR + "/" + fileKey;
 		InputStream in = null;
 		OutputStream out = null;
 		try {
+			res.setHeader("Content-Disposition", "attachment; filename*=UTF-8''" + URLEncoder.encode(fileName, "UTF-8"));
+			res.setCharacterEncoding("UTF-8");
+			res.setContentType("application/octet-stream");
 			in = new BufferedInputStream(new FileInputStream(new File(sourceFile)));
 			out = res.getOutputStream();
 			int size = 1024;
