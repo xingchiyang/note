@@ -30,10 +30,6 @@ CREATE TABLE `dir` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of dir
--- ----------------------------
-
--- ----------------------------
 -- Table structure for `note`
 -- ----------------------------
 DROP TABLE IF EXISTS `note`;
@@ -52,5 +48,15 @@ CREATE TABLE `note` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of note
+-- Table structure for `tag`
 -- ----------------------------
+DROP TABLE IF EXISTS `tag`;
+CREATE TABLE `tag` (
+  `id` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `type` tinyint(4) NOT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `user_id` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

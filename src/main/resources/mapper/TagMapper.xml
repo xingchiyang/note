@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xc.dao.TagDao">
+    <resultMap id="tagResultMap" type="com.xc.entity.Tag">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
+        <result property="userId" column="user_id"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.xc.entity.Tag">
+      insert into tag(id,`name`,`type`,create_time,modify_time,user_id)
+      values (
+        #{id},#{name},#{type},#{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},#{userId}
+      )
+    </insert>
+    <update id="update" parameterType="com.xc.entity.Tag">
+        UPDATE tag
+        <set>
+            <if test="name != null">
+                `name` = #{name},
+            </if>
+            <if test="type != null">
+                `type` = #{type},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime, jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime, jdbcType=TIMESTAMP},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectTagById" resultMap="tagResultMap">
+      select * from tag
+      where id = #{id}
+    </select>
+
+
+    <select id="countTagsByCriterions" parameterType="com.xc.util.Criterions"
+            resultType="java.lang.Integer">
+        select count(*) from tag
+        <if test="_parameter != null">
+            <include refid="com.xc.dao.mapper.base.Common_Where_Clause"/>
+        </if>
+    </select>
+
+    <select id="selectTagsByCriterions" parameterType="java.util.HashMap" resultMap="tagResultMap">
+        select * from tag
+        <if test="_parameter != null">
+            <include refid="com.xc.dao.mapper.base.Common_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+        <choose>
+            <when test="limit != null and start != null">limit #{start},#{limit}</when>
+            <when test="limit != null and start == null">limit #{limit}</when>
+        </choose>
+    </select>
+
+    <update id="delete">
+        delete from tag where id = #{id}
+    </update>
+
+</mapper>

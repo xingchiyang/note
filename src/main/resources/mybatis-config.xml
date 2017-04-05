@@ -7,5 +7,6 @@
         <mapper resource="mapper/BaseMapper.xml"/>
         <mapper resource="mapper/NoteMapper.xml"/>
         <mapper resource="mapper/DirectoryMapper.xml"/>
+        <mapper resource="mapper/TagMapper.xml"/>
     </mappers>
 </configuration>
