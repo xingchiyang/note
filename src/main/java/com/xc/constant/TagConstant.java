@@ -5,6 +5,9 @@ package com.xc.constant;
  */
 public class TagConstant {
 
+	/**
+	 * 标签类型，1：内置；2：普通
+	 */
 	public static final int TAG_TYPE_INTERNAL = 1;
 
 	public static final int TAG_TYPE_NORMAL = 2;

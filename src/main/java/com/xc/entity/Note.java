@@ -18,6 +18,8 @@ public class Note {
 
 	private Integer type; // 笔记类型，markdown、常规笔记
 
+	private String tags;
+
 	private JSONArray attach; // 笔记所在系统文件中的目录
 
 	private Date createTime;
@@ -29,6 +31,14 @@ public class Note {
 	private String userId;
 
 	public Note() {
+	}
+
+	public String getTags() {
+		return tags;
+	}
+
+	public void setTags(String tags) {
+		this.tags = tags;
 	}
 
 	public String getUserId() {
