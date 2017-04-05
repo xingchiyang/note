@@ -29,6 +29,8 @@ public class TagFrontServiceImpl implements TagFrontService {
 		Tag tag = JSON.parseObject(jsonString, Tag.class);
 		ValidateUtil.validateStrBlank(tag.getName(), "标签name不能为空");
 		ValidateUtil.validateIntNull(tag.getType(), "标签type不能为空");
+		Pagination<Tag> tagsList = tagLogic.getTagsList(tag.getName(), null, null, null, null, null);
+		ValidateUtil.validateTrue(tagsList.getData().size() <= 0, "存在同名标签");
 		return RestReturnUtil.toObject("id", tagLogic.createTag(tag));
 	}
 
@@ -39,6 +41,10 @@ public class TagFrontServiceImpl implements TagFrontService {
 		Tag tag = JSON.parseObject(jsonString, Tag.class);
 		ValidateUtil.validateStrBlank(tag.getId(), "标签id不能为空");
 		ValidateUtil.validateStrBlank(tag.getName(), "标签name不能为空");
+		Pagination<Tag> tagsList = tagLogic.getTagsList(tag.getName(), null, null, null, null, null);
+		if (tagsList.getData().size() > 0) {
+			ValidateUtil.validateTrue(tagsList.getData().get(0).getId().equals(tag.getId()), "存在同名标签");
+		}
 		if (tagLogic.modifyTag(tag)) {
 			return RestReturnUtil.toObject("id", tag.getId());
 		}
