@@ -99,4 +99,12 @@
     <delete id="deleteByDirId">
         delete from note where dir_id = #{dirId}
     </delete>
+
+    <select id="selectNotesByDirId" resultMap="noteResultMap">
+        select * from note where dir_id = #{dirId}
+    </select>
+
+    <select id="selectNotesByStatus" resultMap="noteResultMap">
+        select * from note where status = #{status}
+    </select>
 </mapper>

@@ -26,4 +26,9 @@ public interface NoteDao {
 	public void clear(@Param("id") String id);
 
 	public void deleteByDirId(@Param("dirId") String dirId);
+
+	public List<Note> selectNotesByDirId(@Param("dirId") String dirId);
+
+	public List<Note> selectNotesByStatus(@Param("status") Integer status);
+
 }

@@ -9,13 +9,14 @@
         <result property="parentId" column="parent_id"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
+        <result property="status" column="status"/>
         <result property="userId" column="user_id"/>
     </resultMap>
 
     <insert id="insert" parameterType="com.xc.entity.Directory">
-      insert into dir(id,name,parent_id,create_time,modify_time,user_id)
+      insert into dir(id,name,parent_id,create_time,modify_time,status,user_id)
       values (
-        #{id},#{name},#{parentId},#{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},#{userId}
+        #{id},#{name},#{parentId},#{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP},#{status},#{userId}
       )
     </insert>
 
@@ -34,6 +35,9 @@
             <if test="modifyTime != null">
                 modify_time = #{modifyTime, jdbcType=TIMESTAMP},
             </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
             <if test="userId != null">
                 user_id = #{userId},
             </if>
@@ -45,7 +49,7 @@
         select * from dir where id = #{id}
     </select>
 
-    <select id="selectDirsByParentId" resultMap="dirResultMap">
+    <select id="selectDirsByParentIdStatus" resultMap="dirResultMap">
         select * from dir
         where
         <if test="parentId == null">
@@ -54,7 +58,15 @@
         <if test="parentId != null">
             parent_id = #{parentId}
         </if>
+        <if test="status != null">
+            and status = #{status}
+        </if>
         order by modify_time desc
+    </select>
+
+    <select id="selectDirsByStatus" resultMap="dirResultMap">
+        select * from dir
+        where status = #{status}
     </select>
 
     <delete id="delete">

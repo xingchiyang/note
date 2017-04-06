@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Administrator on 2017/02/22 0022.
@@ -122,6 +123,20 @@ public class NoteLogicImpl implements NoteLogic {
 		if (dirId == null)
 			return;
 		noteDao.deleteByDirId(dirId);
+	}
+
+	@Override
+	public List<Note> getNoteListByDirId(String dirId) {
+		if (StringUtils.isEmpty(dirId))
+			return null;
+		return noteDao.selectNotesByDirId(dirId);
+	}
+
+	@Override
+	public List<Note> getNotesByStatus(Integer status) {
+		if (status == null)
+			return null;
+		return noteDao.selectNotesByStatus(status);
 	}
 
 }

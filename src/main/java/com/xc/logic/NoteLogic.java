@@ -3,6 +3,8 @@ package com.xc.logic;
 import com.xc.entity.Note;
 import com.xc.util.page.Pagination;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2017/02/22 0022.
  */
@@ -21,4 +23,8 @@ public interface NoteLogic {
 	public void clearNotes(String ids);
 
 	public void removeNotesByDirId(String dirId);
+
+	public List<Note> getNoteListByDirId(String dirId);
+
+	public List<Note> getNotesByStatus(Integer status);
 }

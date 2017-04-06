@@ -1,9 +1,11 @@
 package com.xc.api.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.xc.api.service.FileFrontService;
 import com.xc.constant.Constant;
+import com.xc.constant.DirConstant;
 import com.xc.constant.NoteConstant;
 import com.xc.entity.Directory;
 import com.xc.entity.Note;
@@ -38,7 +40,7 @@ public class FileFrontServiceImpl implements FileFrontService {
 			id = null;
 		}
 		Directory directory = dirLogic.getDirById(id);
-		List<Directory> dirs = dirLogic.getDirsByParentId(id);
+		List<Directory> dirs = dirLogic.getDirsByParentIdStatus(id, Integer.valueOf(DirConstant.STATUS_NORMAL));
 		Pagination<Note> pagination = noteLogic
 				.getNotesList(null, id, null, 1, NoteConstant.STATUS_NORMAL, Integer.MAX_VALUE, null, null);
 		List<Note> notes = pagination.getData();
@@ -81,5 +83,28 @@ public class FileFrontServiceImpl implements FileFrontService {
 		aAttr.put("isDir", true);
 		root.put("a_attr", aAttr);
 		return JsonUtil.includePropToJson(root);
+	}
+
+	@Override
+	@GetMapping(value = "/recycle", consumes = "*/*")
+	public String getFileInRecycle() {
+		JSONObject ret = new JSONObject();
+		JSONArray dirs = new JSONArray();
+		JSONArray notes = new JSONArray();
+		ret.put("dirs", dirs);
+		ret.put("notes", notes);
+		List<Directory> dirsByStatus = dirLogic.getDirsByStatus(DirConstant.STATUS_DELETED);
+		if (dirsByStatus != null && dirsByStatus.size() > 0) {
+			for (Directory dir : dirsByStatus) {
+				dirs.add(JSON.toJSON(dir));
+			}
+		}
+		List<Note> notesByStatus = noteLogic.getNotesByStatus(DirConstant.STATUS_DELETED);
+		if (notesByStatus != null && notesByStatus.size() > 0) {
+			for (Note note : notesByStatus) {
+				notes.add(JSON.toJSON(note));
+			}
+		}
+		return JsonUtil.includePropToJson(ret);
 	}
 }

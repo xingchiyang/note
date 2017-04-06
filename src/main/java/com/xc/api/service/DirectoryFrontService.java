@@ -16,4 +16,6 @@ public interface DirectoryFrontService {
 	public String getDirsByParentId(String parentId);
 
 	public void removeDir(String id);
+
+	public void removeDirToRecycle(String id);
 }

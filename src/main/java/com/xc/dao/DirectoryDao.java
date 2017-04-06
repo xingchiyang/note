@@ -15,7 +15,9 @@ public interface DirectoryDao {
 
 	public Directory selectDirById(@Param("id") String id);
 
-	public List<Directory> selectDirsByParentId(@Param("parentId") String parentId);
+	public List<Directory> selectDirsByParentIdStatus(@Param("parentId") String parentId, @Param("status") Integer status);
 
 	public void delete(@Param("id") String id);
+
+	public List<Directory> selectDirsByStatus(@Param("status") Integer status);
 }

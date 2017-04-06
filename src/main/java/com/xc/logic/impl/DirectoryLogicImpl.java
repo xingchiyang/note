@@ -1,7 +1,9 @@
 package com.xc.logic.impl;
 
+import com.xc.constant.DirConstant;
 import com.xc.dao.DirectoryDao;
 import com.xc.entity.Directory;
+import com.xc.entity.Note;
 import com.xc.logic.DirectoryLogic;
 import com.xc.logic.NoteLogic;
 import com.xc.util.GenerateUUID;
@@ -57,8 +59,8 @@ public class DirectoryLogicImpl implements DirectoryLogic {
 	}
 
 	@Override
-	public List<Directory> getDirsByParentId(String id) {
-		return directoryDao.selectDirsByParentId(id);
+	public List<Directory> getDirsByParentIdStatus(String id, Integer status) {
+		return directoryDao.selectDirsByParentIdStatus(id, status);
 	}
 
 	@Override
@@ -68,7 +70,7 @@ public class DirectoryLogicImpl implements DirectoryLogic {
 			return;
 		}
 		// 删除子目录及子目录下面的笔记
-		List<Directory> subDirs = getDirsByParentId(id);
+		List<Directory> subDirs = getDirsByParentIdStatus(id, Integer.valueOf(DirConstant.STATUS_DELETED));
 		if (subDirs != null && subDirs.size() > 0) {
 			for (Directory subDir : subDirs) {
 				removeDir(subDir.getId());
@@ -78,5 +80,41 @@ public class DirectoryLogicImpl implements DirectoryLogic {
 		noteLogic.removeNotesByDirId(id);
 		// 删除目录
 		directoryDao.delete(id);
+	}
+
+	@Override
+	@Transactional
+	public void removeDirToRecycle(String id) {
+		if (StringUtils.isEmpty(id)) {
+			return;
+		}
+		// 将子目录及子目录下面的笔记放入回收站
+		List<Directory> subDirs = getDirsByParentIdStatus(id, Integer.valueOf(DirConstant.STATUS_NORMAL));
+		if (subDirs != null && subDirs.size() > 0) {
+			for (Directory subDir : subDirs) {
+				removeDirToRecycle(subDir.getId());
+			}
+		}
+		// 将目录下的笔记放入回收站
+		List<Note> noteListByDirId = noteLogic.getNoteListByDirId(id);
+		if (noteListByDirId != null && noteListByDirId.size() > 0) {
+			for (Note n : noteListByDirId) {
+				noteLogic.removeNotes(n.getId());
+			}
+		}
+		// 将目录放入回收站
+		Directory dir = directoryDao.selectDirById(id);
+		if (dir != null) {
+			dir.setStatus(DirConstant.STATUS_DELETED);
+			directoryDao.update(dir);
+		}
+	}
+
+	@Override
+	public List<Directory> getDirsByStatus(Integer status) {
+		if (status == null) {
+			return null;
+		}
+		return directoryDao.selectDirsByStatus(status);
 	}
 }

@@ -14,7 +14,11 @@ public interface DirectoryLogic {
 
 	public Directory getDirById(String id);
 
-	public List<Directory> getDirsByParentId(String id);
+	public List<Directory> getDirsByParentIdStatus(String id, Integer status);
 
 	public void removeDir(String id);
+
+	public void removeDirToRecycle(String id);
+
+	public List<Directory> getDirsByStatus(Integer status);
 }

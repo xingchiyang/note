@@ -3,6 +3,7 @@ package com.xc.api.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.xc.api.service.DirectoryFrontService;
 import com.xc.constant.Constant;
+import com.xc.constant.DirConstant;
 import com.xc.entity.Directory;
 import com.xc.logic.DirectoryLogic;
 import com.xc.util.JsonUtil;
@@ -16,7 +17,8 @@ import java.util.List;
 
 /**
  * Created by Administrator on 2017/02/22 0022.
- */@RestController
+ */
+@RestController
 @RequestMapping(value = "/api/v1/dir", produces = Constant.MEDIA_TYPE, consumes = Constant.MEDIA_TYPE)
 
 public class DirectoryFrontServiceImpl implements DirectoryFrontService {
@@ -29,6 +31,7 @@ public class DirectoryFrontServiceImpl implements DirectoryFrontService {
 		ValidateUtil.validateStrBlank(jsonString, "请求参数为空");
 		Directory directory = JSON.parseObject(jsonString, Directory.class);
 		ValidateUtil.validateStrBlank(directory.getName(), "目录名称为空");
+		directory.setStatus(DirConstant.STATUS_NORMAL);
 		String id = directoryLogic.createDir(directory);
 		return RestReturnUtil.toObject("id", id);
 	}
@@ -69,13 +72,19 @@ public class DirectoryFrontServiceImpl implements DirectoryFrontService {
 	@Override
 	@GetMapping(value = "query", consumes = "*/*")
 	public String getDirsByParentId(@RequestParam(value = "parentId", required = false) String parentId) {
-		List<Directory> dirs = directoryLogic.getDirsByParentId(parentId);
+		List<Directory> dirs = directoryLogic.getDirsByParentIdStatus(parentId, Integer.valueOf(DirConstant.STATUS_NORMAL));
 		return JsonUtil.includePropToJson(dirs);
 	}
 
 	@Override
-	@GetMapping(value = "remove/{id}", consumes = "*/*")
+	@GetMapping(value = "clear/{id}", consumes = "*/*")
 	public void removeDir(@PathVariable String id) {
 		directoryLogic.removeDir(id);
+	}
+
+	@GetMapping(value = "remove/{id}", consumes = "*/*")
+	@Override
+	public void removeDirToRecycle(@PathVariable String id) {
+		directoryLogic.removeDirToRecycle(id);
 	}
 }

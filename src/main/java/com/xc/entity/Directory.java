@@ -16,9 +16,19 @@ public class Directory {
 
 	private Date modifyTime;
 
+	private Integer status; // 状态，是否已删除，常规
+
 	private String userId;
 
 	public Directory() {
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 
 	public String getUserId() {
