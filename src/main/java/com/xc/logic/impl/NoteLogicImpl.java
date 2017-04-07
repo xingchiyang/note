@@ -86,6 +86,8 @@ public class NoteLogicImpl implements NoteLogic {
 
 	@Override
 	public Note getNoteById(String id) {
+		if (StringUtils.isEmpty(id))
+			return null;
 		Note note = noteDao.selectNoteById(id);
 		List<Attach> attachList = attachLogic.getAttachByNoteId(id);
 		note.setAttach(attachList);
