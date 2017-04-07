@@ -3,7 +3,6 @@ package com.xc.logic.impl;
 import com.xc.constant.DirConstant;
 import com.xc.dao.DirectoryDao;
 import com.xc.entity.Directory;
-import com.xc.entity.Note;
 import com.xc.logic.DirectoryLogic;
 import com.xc.logic.NoteLogic;
 import com.xc.util.GenerateUUID;
@@ -88,24 +87,22 @@ public class DirectoryLogicImpl implements DirectoryLogic {
 		if (StringUtils.isEmpty(id)) {
 			return;
 		}
-		// 将子目录及子目录下面的笔记放入回收站
-		List<Directory> subDirs = getDirsByParentIdStatus(id, Integer.valueOf(DirConstant.STATUS_NORMAL));
-		if (subDirs != null && subDirs.size() > 0) {
-			for (Directory subDir : subDirs) {
-				removeDirToRecycle(subDir.getId());
-			}
-		}
-		// 将目录下的笔记放入回收站
-		List<Note> noteListByDirId = noteLogic.getNoteListByDirId(id);
-		if (noteListByDirId != null && noteListByDirId.size() > 0) {
-			for (Note n : noteListByDirId) {
-				noteLogic.removeNotes(n.getId());
-			}
-		}
-		// 将目录放入回收站
+		// 只将目录放入回收站，子目录和笔记状态不变
 		Directory dir = directoryDao.selectDirById(id);
 		if (dir != null) {
 			dir.setStatus(DirConstant.STATUS_DELETED);
+			directoryDao.update(dir);
+		}
+	}
+
+	@Override
+	public void resumeDirFromRecycle(String id) {
+		if (StringUtils.isEmpty(id)) {
+			return;
+		}
+		Directory dir = directoryDao.selectDirById(id);
+		if (dir != null) {
+			dir.setStatus(DirConstant.STATUS_NORMAL);
 			directoryDao.update(dir);
 		}
 	}

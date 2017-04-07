@@ -87,4 +87,10 @@ public class DirectoryFrontServiceImpl implements DirectoryFrontService {
 	public void removeDirToRecycle(@PathVariable String id) {
 		directoryLogic.removeDirToRecycle(id);
 	}
+
+	@GetMapping(value = "resume/{id}", consumes = "*/*")
+	@Override
+	public void resumeDirFromRecycle(@PathVariable String id) {
+		directoryLogic.resumeDirFromRecycle(id);
+	}
 }

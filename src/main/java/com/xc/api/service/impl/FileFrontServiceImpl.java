@@ -86,7 +86,7 @@ public class FileFrontServiceImpl implements FileFrontService {
 	}
 
 	@Override
-	@GetMapping(value = "/recycle", consumes = "*/*")
+	@GetMapping(value = "/recycle/query", consumes = "*/*")
 	public String getFileInRecycle() {
 		JSONObject ret = new JSONObject();
 		JSONArray dirs = new JSONArray();
@@ -106,5 +106,23 @@ public class FileFrontServiceImpl implements FileFrontService {
 			}
 		}
 		return JsonUtil.includePropToJson(ret);
+	}
+
+	@GetMapping(value = "/recycle/empty", consumes = "*/*")
+	@Override
+	public String clearAllFromRecycle() {
+		List<Directory> dirsByStatus = dirLogic.getDirsByStatus(DirConstant.STATUS_DELETED);
+		if (dirsByStatus != null && dirsByStatus.size() > 0) {
+			for (Directory dir : dirsByStatus) {
+				dirLogic.removeDir(dir.getId());
+			}
+		}
+		List<Note> notesByStatus = noteLogic.getNotesByStatus(DirConstant.STATUS_DELETED);
+		if (notesByStatus != null && notesByStatus.size() > 0) {
+			for (Note note : notesByStatus) {
+				noteLogic.clearNotes(note.getId());
+			}
+		}
+		return JsonUtil.includePropToJson(null);
 	}
 }

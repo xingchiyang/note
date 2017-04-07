@@ -15,7 +15,7 @@ public interface NoteFrontService {
 
 	public void removeNote(String id);
 
-	public void clearNote(String id);
+	public void clearNotes(String ids);
 
-
+	public void resumeNote(String id);
 }

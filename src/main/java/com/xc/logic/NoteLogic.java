@@ -22,6 +22,8 @@ public interface NoteLogic {
 
 	public void clearNotes(String ids);
 
+	public void resumeNote(String id);
+
 	public void removeNotesByDirId(String dirId);
 
 	public List<Note> getNoteListByDirId(String dirId);

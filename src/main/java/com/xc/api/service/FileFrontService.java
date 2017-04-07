@@ -9,4 +9,6 @@ public interface FileFrontService {
 
 	public String getFileInRecycle();
 
+	public String clearAllFromRecycle();
+
 }

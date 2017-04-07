@@ -18,4 +18,6 @@ public interface DirectoryFrontService {
 	public void removeDir(String id);
 
 	public void removeDirToRecycle(String id);
+
+	public void resumeDirFromRecycle(String id);
 }

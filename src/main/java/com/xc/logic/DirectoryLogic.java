@@ -20,5 +20,7 @@ public interface DirectoryLogic {
 
 	public void removeDirToRecycle(String id);
 
+	public void resumeDirFromRecycle(String id);
+
 	public List<Directory> getDirsByStatus(Integer status);
 }

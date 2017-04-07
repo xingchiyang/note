@@ -103,6 +103,8 @@ public class NoteLogicImpl implements NoteLogic {
 	@Override
 	@Transactional
 	public void removeNotes(String ids) {
+		if (StringUtils.isEmpty(ids))
+			return;
 		for (String id : ids.split(",")) {
 			noteDao.delete(id);
 		}
@@ -111,10 +113,23 @@ public class NoteLogicImpl implements NoteLogic {
 	@Override
 	@Transactional
 	public void clearNotes(String ids) {
+		if (StringUtils.isEmpty(ids))
+			return;
 		for (String id : ids.split(",")) {
 			noteDao.clear(id);
 		}
 
+	}
+
+	@Override
+	public void resumeNote(String id) {
+		if (StringUtils.isEmpty(id))
+			return;
+		Note note = noteDao.selectNoteById(id);
+		if (note != null) {
+			note.setStatus(NoteConstant.STATUS_NORMAL);
+			noteDao.update(note);
+		}
 	}
 
 	@Override

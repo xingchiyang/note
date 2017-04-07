@@ -76,10 +76,18 @@ public class NoteFrontServiceImpl implements NoteFrontService {
 
 	@GetMapping(value = "/clear/{ids}", consumes = "*/*")
 	@Override
-	public void clearNote(@PathVariable String ids) {
+	public void clearNotes(@PathVariable String ids) {
 		if (StringUtils.isEmpty(ids))
 			return;
 		noteLogic.clearNotes(ids);
+	}
+
+	@GetMapping(value = "/resume/{id}", consumes = "*/*")
+	@Override
+	public void resumeNote(@PathVariable String id) {
+		if (StringUtils.isEmpty(id))
+			return;
+		noteLogic.resumeNote(id);
 	}
 
 }
