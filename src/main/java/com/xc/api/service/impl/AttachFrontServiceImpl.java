@@ -66,7 +66,9 @@ public class AttachFrontServiceImpl implements AttachFrontService {
 		try {
 			MultipartFile file = request.getFile(FILE);
 			fileName = file.getOriginalFilename();
-			fileInfo.setSize(file.getSize());
+			long fileSize = 0;
+			fileSize = file.getSize()/1024;
+			fileInfo.setSize(fileSize);
 			fileInfo.setName(fileName);
 			in = file.getInputStream();
 
