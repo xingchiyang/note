@@ -9,6 +9,7 @@
         <result property="uploadTime" column="upload_time" jdbcType="TIMESTAMP"/>
         <result property="size" column="size"/>
         <result property="noteId" column="note_id"/>
+        <association property="note" column="note_id" select="com.xc.dao.NoteDao.selectNoteById"/>
     </resultMap>
 
     <insert id="insert" parameterType="com.xc.entity.Attach">

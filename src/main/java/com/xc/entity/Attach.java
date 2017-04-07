@@ -11,6 +11,15 @@ public class Attach {
 	private Date uploadTime;
 	private long size;
 	private String noteId;
+	private Note note;
+
+	public Note getNote() {
+		return note;
+	}
+
+	public void setNote(Note note) {
+		this.note = note;
+	}
 
 	public String getId() {
 		return id;
