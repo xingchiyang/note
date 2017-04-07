@@ -1,8 +1,7 @@
 package com.xc.entity;
 
-import com.alibaba.fastjson.JSONArray;
-
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Administrator on 2017/02/22 0022.
@@ -20,7 +19,7 @@ public class Note {
 
 	private String tags;
 
-	private JSONArray attach; // 笔记所在系统文件中的目录
+	private List<Attach> attach; // 供前端调用和显示用
 
 	private Date createTime;
 
@@ -113,11 +112,11 @@ public class Note {
 		this.type = type;
 	}
 
-	public JSONArray getAttach() {
+	public List<Attach> getAttach() {
 		return attach;
 	}
 
-	public void setAttach(JSONArray attach) {
+	public void setAttach(List<Attach> attach) {
 		this.attach = attach;
 	}
 }

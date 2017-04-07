@@ -40,7 +40,6 @@ CREATE TABLE `note` (
   `content` longtext,
   `dir_id` varchar(255) DEFAULT NULL,
   `tags` text,
-  `attach` text,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status` tinyint(4) NOT NULL,
@@ -60,5 +59,18 @@ CREATE TABLE `tag` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `user_id` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for `attach`
+-- ----------------------------
+DROP TABLE IF EXISTS `attach`;
+CREATE TABLE `attach` (
+  `id` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `upload_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `size` bigint(20) DEFAULT NULL,
+  `note_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

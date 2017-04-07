@@ -3,8 +3,12 @@ package com.xc.api.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.xc.api.service.AttachFrontService;
 import com.xc.constant.Constant;
+import com.xc.entity.Attach;
+import com.xc.logic.AttachLogic;
 import com.xc.util.GenerateUUID;
 import com.xc.util.JsonUtil;
+import com.xc.util.page.Pagination;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,10 +30,20 @@ public class AttachFrontServiceImpl implements AttachFrontService {
 
 	private static final String FILE_DIR = System.getProperty("user.dir") + "/../upload";
 
+	@Autowired
+	private AttachLogic attachLogic;
+
 	@Override
 	@PostMapping("/upload")
 	public Object uploadFile(HttpServletRequest request) {
 		FileInfo fileInfo = saveFile(request);
+		// 保存附件
+		Attach attach = new Attach();
+		attach.setId(fileInfo.getId());
+		attach.setName(fileInfo.getName());
+		attach.setSize(fileInfo.getSize());
+		attachLogic.createAttach(attach);
+
 		JSONObject ret = new JSONObject();
 		ret.put("code", 0);
 		ret.put("msg", "上次成功");
@@ -52,6 +66,7 @@ public class AttachFrontServiceImpl implements AttachFrontService {
 		try {
 			MultipartFile file = request.getFile(FILE);
 			fileName = file.getOriginalFilename();
+			fileInfo.setSize(file.getSize());
 			fileInfo.setName(fileName);
 			in = file.getInputStream();
 
@@ -89,7 +104,8 @@ public class AttachFrontServiceImpl implements AttachFrontService {
 
 	@Override
 	@GetMapping("/get")
-	public Object getFile(@RequestParam("fileKey") String fileKey, @RequestParam("fileName") String fileName, HttpServletResponse res) {
+	public Object getFile(@RequestParam("fileKey") String fileKey, @RequestParam("fileName") String fileName,
+			HttpServletResponse res) {
 		if (StringUtils.isEmpty(fileKey)) {
 			return JsonUtil.includePropToJson(null);
 		}
@@ -135,13 +151,37 @@ public class AttachFrontServiceImpl implements AttachFrontService {
 		if (file.exists()) {
 			file.delete();
 		}
+
+		// 删除附件
+		attachLogic.removeAttach(key);
+
 		return JsonUtil.includePropToJson(null);
+	}
+
+	@GetMapping("/query")
+	@Override
+	public String getAttachList(@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "page", required = false) Integer page,
+			@RequestParam(value = "size", required = false) Integer size,
+			@RequestParam(value = "sortKey", required = false) String sortKey,
+			@RequestParam(value = "sortType", required = false) Integer sortType) {
+		Pagination<Attach> p = attachLogic.getAttachsList(name, page, size, sortKey, sortType);
+		return JsonUtil.includePropToJson(p.formate());
 	}
 
 	class FileInfo {
 		private String id;
 		private String src;
 		private String name;
+		private long size;
+
+		public long getSize() {
+			return size;
+		}
+
+		public void setSize(long size) {
+			this.size = size;
+		}
 
 		public String getId() {
 			return id;

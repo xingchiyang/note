@@ -2,8 +2,10 @@ package com.xc.logic.impl;
 
 import com.xc.constant.NoteConstant;
 import com.xc.dao.NoteDao;
+import com.xc.entity.Attach;
 import com.xc.entity.Directory;
 import com.xc.entity.Note;
+import com.xc.logic.AttachLogic;
 import com.xc.logic.DirectoryLogic;
 import com.xc.logic.NoteLogic;
 import com.xc.util.Criterions;
@@ -28,7 +30,11 @@ public class NoteLogicImpl implements NoteLogic {
 	private NoteDao noteDao;
 	@Autowired
 	private DirectoryLogic dirLogic;
+	@Autowired
+	private AttachLogic attachLogic;
 
+	@Override
+	@Transactional
 	public String createNote(Note note) {
 		Directory dir = dirLogic.getDirById(note.getDirId());
 		if (dir == null) {
@@ -42,6 +48,9 @@ public class NoteLogicImpl implements NoteLogic {
 		note.setCreateTime(now);
 		note.setModifyTime(now);
 		noteDao.insert(note);
+
+		updateAttach(note);
+
 		return id;
 	}
 
@@ -54,15 +63,33 @@ public class NoteLogicImpl implements NoteLogic {
 		oldNote.setContent(note.getContent());
 		oldNote.setTitle(note.getTitle());
 		oldNote.setTags(note.getTags());
-		oldNote.setAttach(note.getAttach());
 		oldNote.setModifyTime(new Date());
 		noteDao.update(oldNote);
+
+		updateAttach(note);
+
 		return true;
+	}
+
+	// 更新插件表
+	private void updateAttach(Note note) {
+		List<Attach> attach = note.getAttach();
+		if (attach != null && attach.size() > 0) {
+			for (int i = 0; i < attach.size(); i++) {
+				Attach att = attach.get(i);
+				Attach realAttach = attachLogic.getAttachById(att.getId());
+				realAttach.setNoteId(note.getId());
+				attachLogic.modifyAttach(realAttach);
+			}
+		}
 	}
 
 	@Override
 	public Note getNoteById(String id) {
-		return noteDao.selectNoteById(id);
+		Note note = noteDao.selectNoteById(id);
+		List<Attach> attachList = attachLogic.getAttachByNoteId(id);
+		note.setAttach(attachList);
+		return note;
 	}
 
 	@Override
@@ -117,8 +144,11 @@ public class NoteLogicImpl implements NoteLogic {
 			return;
 		for (String id : ids.split(",")) {
 			noteDao.clear(id);
-		}
 
+			// TODO 删除本地附件
+			// 删除相应附件表
+			attachLogic.removeAttachByNoteId(id);
+		}
 	}
 
 	@Override

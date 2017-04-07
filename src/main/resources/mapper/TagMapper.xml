@@ -45,7 +45,6 @@
       where id = #{id}
     </select>
 
-
     <select id="countTagsByCriterions" parameterType="com.xc.util.Criterions"
             resultType="java.lang.Integer">
         select count(*) from tag
@@ -68,8 +67,8 @@
         </choose>
     </select>
 
-    <update id="delete">
+    <delete id="delete">
         delete from tag where id = #{id}
-    </update>
+    </delete>
 
 </mapper>

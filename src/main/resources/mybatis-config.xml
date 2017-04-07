@@ -8,5 +8,6 @@
         <mapper resource="mapper/NoteMapper.xml"/>
         <mapper resource="mapper/DirectoryMapper.xml"/>
         <mapper resource="mapper/TagMapper.xml"/>
+        <mapper resource="mapper/AttachMapper.xml"/>
     </mappers>
 </configuration>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xc.dao.AttachDao">
+    <resultMap id="attachResultMap" type="com.xc.entity.Attach">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="uploadTime" column="upload_time" jdbcType="TIMESTAMP"/>
+        <result property="size" column="size"/>
+        <result property="noteId" column="note_id"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.xc.entity.Attach">
+      insert into attach(id,`name`,upload_time,`size`,note_id)
+      values (
+        #{id},#{name},#{uploadTime,jdbcType=TIMESTAMP},#{size},#{noteId}
+      )
+    </insert>
+    <update id="update" parameterType="com.xc.entity.Attach">
+        UPDATE attach
+        <set>
+            <if test="name != null">
+                `name` = #{name},
+            </if>
+            <if test="uploadTime != null">
+                upload_time = #{uploadTime, jdbcType=TIMESTAMP},
+            </if>
+            <if test="size != null">
+                `size` = #{size},
+            </if>
+            <if test="noteId != null">
+                note_id = #{noteId},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectAttachById" resultMap="attachResultMap">
+      select * from attach
+      where id = #{id}
+    </select>
+
+    <select id="selectAttachByNoteId" resultMap="attachResultMap">
+      select * from attach
+      where note_id = #{noteId}
+    </select>
+
+    <select id="countAttachsByCriterions" parameterType="com.xc.util.Criterions"
+            resultType="java.lang.Integer">
+        select count(*) from attach
+        <if test="_parameter != null">
+            <include refid="com.xc.dao.mapper.base.Common_Where_Clause"/>
+        </if>
+    </select>
+
+    <select id="selectAttachsByCriterions" parameterType="java.util.HashMap" resultMap="attachResultMap">
+        select * from attach
+        <if test="_parameter != null">
+            <include refid="com.xc.dao.mapper.base.Common_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+        <choose>
+            <when test="limit != null and start != null">limit #{start},#{limit}</when>
+            <when test="limit != null and start == null">limit #{limit}</when>
+        </choose>
+    </select>
+
+    <delete id="delete">
+        delete from attach where id = #{id}
+    </delete>
+
+    <delete id="deleteByNoteId">
+        delete from attach where note_id = #{noteId}
+    </delete>
+
+</mapper>
