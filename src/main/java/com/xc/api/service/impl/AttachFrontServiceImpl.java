@@ -2,6 +2,7 @@ package com.xc.api.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.xc.api.service.AttachFrontService;
+import com.xc.constant.AttachConstant;
 import com.xc.constant.Constant;
 import com.xc.entity.Attach;
 import com.xc.logic.AttachLogic;
@@ -35,14 +36,16 @@ public class AttachFrontServiceImpl implements AttachFrontService {
 
 	@Override
 	@PostMapping("/upload")
-	public Object uploadFile(HttpServletRequest request) {
+	public Object uploadFile(@RequestParam(value = "type", required = false) String type, HttpServletRequest request) {
 		FileInfo fileInfo = saveFile(request);
-		// 保存附件
-		Attach attach = new Attach();
-		attach.setId(fileInfo.getId());
-		attach.setName(fileInfo.getName());
-		attach.setSize(fileInfo.getSize());
-		attachLogic.createAttach(attach);
+		if (AttachConstant.TYPE_ATTACH.equals(type)) {
+			// 保存附件
+			Attach attach = new Attach();
+			attach.setId(fileInfo.getId());
+			attach.setName(fileInfo.getName());
+			attach.setSize(fileInfo.getSize());
+			attachLogic.createAttach(attach);
+		}
 
 		JSONObject ret = new JSONObject();
 		ret.put("code", 0);
@@ -67,7 +70,7 @@ public class AttachFrontServiceImpl implements AttachFrontService {
 			MultipartFile file = request.getFile(FILE);
 			fileName = file.getOriginalFilename();
 			long fileSize = 0;
-			fileSize = file.getSize()/1024;
+			fileSize = file.getSize() / 1024;
 			fileInfo.setSize(fileSize);
 			fileInfo.setName(fileName);
 			in = file.getInputStream();

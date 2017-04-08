@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface AttachFrontService {
 
-	public Object uploadFile(HttpServletRequest request);
+	public Object uploadFile(String type, HttpServletRequest request);
 
 	public Object getFile(String fileKey, String fileName, HttpServletResponse res);
 
