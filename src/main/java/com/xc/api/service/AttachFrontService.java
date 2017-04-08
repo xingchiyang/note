@@ -14,6 +14,6 @@ public interface AttachFrontService {
 
 	public Object removeFile(String id);
 
-	public String getAttachList(String name, Integer page, Integer size, String sortKey, Integer sortType);
+	public String getAttachList(String name, String type, Integer page, Integer size, String sortKey, Integer sortType);
 
 }

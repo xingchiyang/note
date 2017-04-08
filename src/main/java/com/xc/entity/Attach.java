@@ -8,10 +8,19 @@ import java.util.Date;
 public class Attach {
 	private String id;
 	private String name;
+	private String type;
 	private Date uploadTime;
 	private long size;
 	private String noteId;
 	private Note note;
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 
 	public Note getNote() {
 		return note;

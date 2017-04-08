@@ -6,6 +6,7 @@
     <resultMap id="attachResultMap" type="com.xc.entity.Attach">
         <result property="id" column="id"/>
         <result property="name" column="name"/>
+        <result property="type" column="type"/>
         <result property="uploadTime" column="upload_time" jdbcType="TIMESTAMP"/>
         <result property="size" column="size"/>
         <result property="noteId" column="note_id"/>
@@ -13,9 +14,9 @@
     </resultMap>
 
     <insert id="insert" parameterType="com.xc.entity.Attach">
-      insert into attach(id,`name`,upload_time,`size`,note_id)
+      insert into attach(id,`name`,`type`,upload_time,`size`,note_id)
       values (
-        #{id},#{name},#{uploadTime,jdbcType=TIMESTAMP},#{size},#{noteId}
+        #{id},#{name},#{type},#{uploadTime,jdbcType=TIMESTAMP},#{size},#{noteId}
       )
     </insert>
     <update id="update" parameterType="com.xc.entity.Attach">
@@ -23,6 +24,9 @@
         <set>
             <if test="name != null">
                 `name` = #{name},
+            </if>
+            <if test="type != null">
+                `type` = #{type},
             </if>
             <if test="uploadTime != null">
                 upload_time = #{uploadTime, jdbcType=TIMESTAMP},

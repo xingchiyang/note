@@ -1,5 +1,6 @@
 package com.xc.logic.impl;
 
+import com.xc.constant.Constant;
 import com.xc.constant.NoteConstant;
 import com.xc.dao.NoteDao;
 import com.xc.entity.Attach;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -148,6 +150,16 @@ public class NoteLogicImpl implements NoteLogic {
 			noteDao.clear(id);
 
 			// TODO 删除本地附件
+			List<Attach> attachByNoteId = attachLogic.getAttachByNoteId(id);
+			if (attachByNoteId != null && attachByNoteId.size() > 0) {
+				File file = null;
+				for (Attach att : attachByNoteId) {
+					file = new File(Constant.FILE_DIR + "/" + att.getId());
+					if (file.exists()) {
+						file.delete();
+					}
+				}
+			}
 			// 删除相应附件表
 			attachLogic.removeAttachByNoteId(id);
 		}

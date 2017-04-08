@@ -69,6 +69,7 @@ DROP TABLE IF EXISTS `attach`;
 CREATE TABLE `attach` (
   `id` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
+  `type` varchar(255) NOT NULL,
   `upload_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `size` bigint(20) DEFAULT NULL,
   `note_id` varchar(255) DEFAULT NULL,

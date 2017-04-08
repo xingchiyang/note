@@ -68,13 +68,17 @@ public class AttachLogicImpl implements AttachLogic {
 	}
 
 	@Override
-	public Pagination<Attach> getAttachsList(String name, Integer page, Integer size, String sortKey, Integer sortType) {
+	public Pagination<Attach> getAttachsList(String name, String type, Integer page, Integer size, String sortKey,
+			Integer sortType) {
 		Criterions criterions = new Criterions();
 		Criterions.Criteria criteria = criterions.createCriteria();
 		if (!StringUtils.isEmpty(name)) {
 			String param = "%" + name + "%";
 			String nameClause = "name like ?";
 			criteria.andCustom(nameClause, param);
+		}
+		if (!StringUtils.isEmpty(type)) {
+			criteria.andColumnEqualTo("type", type);
 		}
 		Integer total = attachDao.countAttachsByCriterions(criterions);
 		Pagination<Attach> p = new Pagination<Attach>(page, size, total);

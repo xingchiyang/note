@@ -2,7 +2,6 @@ package com.xc.api.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.xc.api.service.AttachFrontService;
-import com.xc.constant.AttachConstant;
 import com.xc.constant.Constant;
 import com.xc.entity.Attach;
 import com.xc.logic.AttachLogic;
@@ -27,25 +26,20 @@ import java.net.URLEncoder;
 @RequestMapping(value = "/api/v1/attach", produces = Constant.MEDIA_TYPE, consumes = Constant.MEDIA_TYPE_All)
 public class AttachFrontServiceImpl implements AttachFrontService {
 
-	private static final String FILE = "file";
-
-	private static final String FILE_DIR = System.getProperty("user.dir") + "/../upload";
-
 	@Autowired
 	private AttachLogic attachLogic;
 
 	@Override
 	@PostMapping("/upload")
-	public Object uploadFile(@RequestParam(value = "type", required = false) String type, HttpServletRequest request) {
+	public Object uploadFile(@RequestParam(value = "type", required = true) String type, HttpServletRequest request) {
 		FileInfo fileInfo = saveFile(request);
-		if (AttachConstant.TYPE_ATTACH.equals(type)) {
-			// 保存附件
-			Attach attach = new Attach();
-			attach.setId(fileInfo.getId());
-			attach.setName(fileInfo.getName());
-			attach.setSize(fileInfo.getSize());
-			attachLogic.createAttach(attach);
-		}
+		// 保存附件
+		Attach attach = new Attach();
+		attach.setId(fileInfo.getId());
+		attach.setName(fileInfo.getName());
+		attach.setType(type);
+		attach.setSize(fileInfo.getSize());
+		attachLogic.createAttach(attach);
 
 		JSONObject ret = new JSONObject();
 		ret.put("code", 0);
@@ -67,7 +61,7 @@ public class AttachFrontServiceImpl implements AttachFrontService {
 		String fileKey = "";
 		String fileName = "";
 		try {
-			MultipartFile file = request.getFile(FILE);
+			MultipartFile file = request.getFile(Constant.FILE);
 			fileName = file.getOriginalFilename();
 			long fileSize = 0;
 			fileSize = file.getSize() / 1024;
@@ -75,13 +69,13 @@ public class AttachFrontServiceImpl implements AttachFrontService {
 			fileInfo.setName(fileName);
 			in = file.getInputStream();
 
-			File fileDir = new File(FILE_DIR);
+			File fileDir = new File(Constant.FILE_DIR);
 			if (!fileDir.exists()) {
 				fileDir.mkdirs();
 			}
 			fileKey = GenerateUUID.getUUID32();
 			fileInfo.setId(fileKey);
-			desFile = new File(FILE_DIR + "/" + fileKey);
+			desFile = new File(Constant.FILE_DIR + "/" + fileKey);
 
 			out = new BufferedOutputStream(new FileOutputStream(desFile));
 			int size = 1024;
@@ -114,7 +108,7 @@ public class AttachFrontServiceImpl implements AttachFrontService {
 		if (StringUtils.isEmpty(fileKey)) {
 			return JsonUtil.includePropToJson(null);
 		}
-		String sourceFile = FILE_DIR + "/" + fileKey;
+		String sourceFile = Constant.FILE_DIR + "/" + fileKey;
 		InputStream in = null;
 		OutputStream out = null;
 		try {
@@ -152,7 +146,7 @@ public class AttachFrontServiceImpl implements AttachFrontService {
 		if (StringUtils.isEmpty(key)) {
 			return JsonUtil.includePropToJson(null);
 		}
-		File file = new File(FILE_DIR + "/" + key);
+		File file = new File(Constant.FILE_DIR + "/" + key);
 		if (file.exists()) {
 			file.delete();
 		}
@@ -166,11 +160,12 @@ public class AttachFrontServiceImpl implements AttachFrontService {
 	@GetMapping("/query")
 	@Override
 	public String getAttachList(@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "page", required = false) Integer page,
 			@RequestParam(value = "size", required = false) Integer size,
 			@RequestParam(value = "sortKey", required = false) String sortKey,
 			@RequestParam(value = "sortType", required = false) Integer sortType) {
-		Pagination<Attach> p = attachLogic.getAttachsList(name, page, size, sortKey, sortType);
+		Pagination<Attach> p = attachLogic.getAttachsList(name, type, page, size, sortKey, sortType);
 		return JsonUtil.includePropToJson(p.formate());
 	}
 
