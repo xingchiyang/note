@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xc.dao.UserDao">
+    <resultMap id="userResultMap" type="com.xc.entity.User">
+        <result property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="passwd" column="passwd"/>
+        <result property="readKey" column="read_key"/>
+        <result property="name" column="name"/>
+        <result property="email" column="email"/>
+        <result property="telephone" column="telephone"/>
+        <result property="type" column="type"/>
+        <result property="apikey" column="apikey"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.xc.entity.User">
+      insert into user(id, username, passwd, readKey, `name`,email,telephone, `type`,apikey)
+      values (
+        #{id},#{username},#{passwd},#{readKey}, #{name}, #{email},#{telephone},#{type},#{apikey}
+      )
+    </insert>
+    <update id="update" parameterType="com.xc.entity.User">
+        UPDATE user
+        <set>
+            <if test="username != null">
+                username = #{username},
+            </if>
+            <if test="passwd != null">
+                passwd = #{passwd},
+            </if>
+            <if test="readKey != null">
+                read_key = #{readKey},
+            </if>
+            <if test="name != null">
+                `name` = #{name}
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="telephone != null">
+                telephone = #{telephone},
+            </if>
+            <if test="type != null">
+                `type` = type
+            </if>
+            <if test="apikey != null">
+                apikey = #{apikey},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectUserById" resultMap="userResultMap">
+      select * from user
+      where id = #{id}
+    </select>
+
+    <select id="selectUserByUsername" resultMap="userResultMap">
+        select * from USER
+        where username = #{username}
+    </select>
+
+</mapper>

@@ -9,5 +9,6 @@
         <mapper resource="mapper/DirectoryMapper.xml"/>
         <mapper resource="mapper/TagMapper.xml"/>
         <mapper resource="mapper/AttachMapper.xml"/>
+        <mapper resource="mapper/UserMapper.xml"/>
     </mappers>
 </configuration>
