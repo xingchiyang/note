@@ -1,0 +1,37 @@
+package com.xc.api.service.impl;
+
+import com.alibaba.fastjson.JSON;
+import com.xc.api.service.LoginFrontSerice;
+import com.xc.constant.Constant;
+import com.xc.entity.User;
+import com.xc.logic.UserLogic;
+import com.xc.util.Des;
+import com.xc.util.ValidateUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * Created by yb on 2017/4/9 0009.
+ */
+@RestController
+@RequestMapping(value = "/api/v1/system", produces = Constant.MEDIA_TYPE, consumes = Constant.MEDIA_TYPE)
+public class LoginFrontServiceImpl implements LoginFrontSerice {
+	@Autowired
+	private UserLogic userLogic;
+
+	@Override
+	@PostMapping("/login")
+	public String login(@RequestBody String jsonStr) {
+		ValidateUtil.validateStrBlank(jsonStr, "请求参数为空");
+		User user = JSON.parseObject(jsonStr, User.class);
+		ValidateUtil.validateStrBlank(user.getUsername(), "用户名不能为空");
+		ValidateUtil.validateStrBlank(user.getPasswd(), "密码不能为空");
+		User userByUsername = userLogic.getUserByUsername(user.getUsername());
+		ValidateUtil.validateTrue(userByUsername != null, "用户名不存在");
+		ValidateUtil.validateTrue(Des.encryptBasedDes(user.getPasswd()).equals(userByUsername.getPasswd()), "密码错误");
+		return null;
+	}
+}

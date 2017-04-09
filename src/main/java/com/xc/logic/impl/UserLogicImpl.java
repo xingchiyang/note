@@ -4,6 +4,7 @@ import com.xc.constant.UserConstant;
 import com.xc.dao.UserDao;
 import com.xc.entity.User;
 import com.xc.logic.UserLogic;
+import com.xc.util.Des;
 import com.xc.util.GenerateUUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class UserLogicImpl implements UserLogic {
 			return null;
 		String id = GenerateUUID.getUUID32();
 		user.setId(id);
+		user.setPasswd(Des.encryptBasedDes(user.getPasswd()));
 		user.setApikey(GenerateUUID.getUUID32());
 		user.setType(UserConstant.TYPE_NORMAL);
 		userDao.insert(user);
@@ -38,7 +40,7 @@ public class UserLogicImpl implements UserLogic {
 			return false;
 		userById.setName(user.getName());
 		userById.setEmail(user.getEmail());
-		userById.setPasswd(user.getPasswd());
+		userById.setPasswd(Des.encryptBasedDes(user.getPasswd()));
 		userById.setReadKey(user.getReadKey());
 		userById.setTelephone(user.getTelephone());
 		userDao.update(user);
