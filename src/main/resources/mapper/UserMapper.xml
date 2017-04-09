@@ -62,4 +62,9 @@
         where username = #{username}
     </select>
 
+    <select id="selectUserByApikey" resultMap="userResultMap">
+        select * from USER
+        where apikey = #{apikey}
+    </select>
+
 </mapper>

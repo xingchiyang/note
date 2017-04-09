@@ -16,4 +16,6 @@ public interface UserDao {
 
 	public User selectUserByUsername(@Param("username") String username);
 
+	public User selectUserByApikey(@Param("apikey") String apikey);
+
 }

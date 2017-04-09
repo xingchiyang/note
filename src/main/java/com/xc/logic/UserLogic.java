@@ -15,4 +15,6 @@ public interface UserLogic {
 
 	public User getUserByUsername(String username);
 
+	public User getUserByApikey(String apikey);
+
 }

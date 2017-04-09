@@ -60,4 +60,11 @@ public class UserLogicImpl implements UserLogic {
 			return null;
 		return userDao.selectUserByUsername(username);
 	}
+
+	@Override
+	public User getUserByApikey(String apikey) {
+		if (StringUtils.isEmpty(apikey))
+			return null;
+		return userDao.selectUserByApikey(apikey);
+	}
 }

@@ -11,4 +11,6 @@ public class Constant {
 	public static final String FILE = "file";
 	/** 保存附件的目录*/
 	public static final String FILE_DIR = System.getProperty("user.dir") + "/../upload";
+
+	public static final String TOKEN = "token";
 }
