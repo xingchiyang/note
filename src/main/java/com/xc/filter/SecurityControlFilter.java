@@ -53,8 +53,7 @@ public class SecurityControlFilter implements Filter {
 		}
 		Long tokenTime = loginCache.getToken(token);
 		if (tokenTime == null) {
-			response.setStatus(401);
-			throw new NoteException(NoteExpCode.EXP_CODE_NOT_AUTH, "无访问权限");
+			throw new NoteException(NoteExpCode.EXP_CODE_NOT_AUTH, "请先登录");
 		} else {
 			// 通过，更新token。
 			Date currentTime = new Date();
