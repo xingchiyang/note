@@ -1,5 +1,6 @@
 package com.xc.logic.impl;
 
+import com.xc.constant.UserConstant;
 import com.xc.dao.UserDao;
 import com.xc.entity.User;
 import com.xc.logic.UserLogic;
@@ -23,6 +24,7 @@ public class UserLogicImpl implements UserLogic {
 		String id = GenerateUUID.getUUID32();
 		user.setId(id);
 		user.setApikey(GenerateUUID.getUUID32());
+		user.setType(UserConstant.TYPE_NORMAL);
 		userDao.insert(user);
 		return id;
 	}

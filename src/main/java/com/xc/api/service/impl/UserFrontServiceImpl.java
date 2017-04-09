@@ -9,6 +9,7 @@ import com.xc.util.RestReturnUtil;
 import com.xc.util.ValidateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +24,7 @@ public class UserFrontServiceImpl implements UserFrontService {
 
 	@Override
 	@PostMapping("/create")
-	public String createUser(String jsonString) {
+	public String createUser(@RequestBody String jsonString) {
 		ValidateUtil.validateStrBlank(jsonString, "请求参数为空");
 		User user = JSON.parseObject(jsonString, User.class);
 		ValidateUtil.validateStrBlank(user.getUsername(), "用户名不能为空");
@@ -34,7 +35,8 @@ public class UserFrontServiceImpl implements UserFrontService {
 	}
 
 	@Override
-	public String modifyUser(String jsonString) {
+	@PostMapping("/modify")
+	public String modifyUser(@RequestBody String jsonString) {
 		ValidateUtil.validateStrBlank(jsonString, "请求参数为空");
 		User user = JSON.parseObject(jsonString, User.class);
 		ValidateUtil.validateStrBlank(user.getUsername(), "用户名不能为空");

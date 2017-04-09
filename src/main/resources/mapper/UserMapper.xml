@@ -16,7 +16,7 @@
     </resultMap>
 
     <insert id="insert" parameterType="com.xc.entity.User">
-      insert into user(id, username, passwd, readKey, `name`,email,telephone, `type`,apikey)
+      insert into user(id, username, passwd, read_key, `name`,email,telephone, `type`,apikey)
       values (
         #{id},#{username},#{passwd},#{readKey}, #{name}, #{email},#{telephone},#{type},#{apikey}
       )
