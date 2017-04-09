@@ -53,18 +53,14 @@ public class SecurityControlFilter implements Filter {
 		}
 		Long tokenTime = loginCache.getToken(token);
 		if (tokenTime == null) {
-			thorw401Exceoption(response);
+			response.setStatus(401);
+			throw new NoteException(NoteExpCode.EXP_CODE_NOT_AUTH, "无访问权限");
 		} else {
 			// 通过，更新token。
 			Date currentTime = new Date();
 			loginCache.setToken(token, currentTime.getTime());
 			filterChain.doFilter(servletRequest, servletResponse);
 		}
-	}
-
-	private static void thorw401Exceoption(HttpServletResponse response) {
-		response.setStatus(401);
-		throw new NoteException(NoteExpCode.EXP_CODE_NOT_AUTH, "无访问权限");
 	}
 
 	@Override
