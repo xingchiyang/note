@@ -93,3 +93,6 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_username` (`username`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 内置sql
+insert into user values('aba2d84a05cd44d2b2343dee8c9c29b4', 'admin', '+xLPjRuJgnM=', null, '管理员', null, null, 1, 'fe0e161f24884bdc89e33955353a104e');
