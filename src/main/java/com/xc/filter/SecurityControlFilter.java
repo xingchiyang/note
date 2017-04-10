@@ -4,6 +4,8 @@ import com.xc.cache.LoginCache;
 import com.xc.constant.Constant;
 import com.xc.exception.NoteException;
 import com.xc.exception.NoteExpCode;
+import com.xc.logic.UserLogic;
+import com.xc.util.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,10 +21,12 @@ import java.util.Date;
  */
 @Component
 public class SecurityControlFilter implements Filter {
-	private String[] URL = new String[] { "/note/api/v1/system/login", "/note/api/v1/user/create"};
+	private String[] URL = new String[] { "/note/api/v1/system/login", "/note/api/v1/user/create" };
 
 	@Autowired
 	private LoginCache loginCache;
+	@Autowired
+	private UserLogic userLogic;
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -42,24 +46,43 @@ public class SecurityControlFilter implements Filter {
 		}
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
 		String token = null;
+		String userId = null;
 		Cookie[] cookies = request.getCookies();
-		if (cookies != null) {
-			for (Cookie cookie : cookies) {
-				if (cookie.getName().equalsIgnoreCase(Constant.TOKEN)) {
-					token = cookie.getValue();
-					break;
-				}
-			}
+
+		userId = getFromCookie(Constant.USERID, cookies);
+		SecurityContextHolder.add(userId);
+		if (userId == null || userLogic.getUserById(userId) == null) {
+			// 用户不存在
+			throw401Exception();
 		}
+
+		token = getFromCookie(Constant.TOKEN, cookies);
 		Long tokenTime = loginCache.getToken(token);
 		if (tokenTime == null) {
-			throw new NoteException(NoteExpCode.EXP_CODE_NOT_AUTH, "请先登录");
+			throw401Exception();
 		} else {
 			// 通过，更新token。
 			Date currentTime = new Date();
 			loginCache.setToken(token, currentTime.getTime());
 			filterChain.doFilter(servletRequest, servletResponse);
 		}
+	}
+
+	private void throw401Exception() {
+		throw new NoteException(NoteExpCode.EXP_CODE_NOT_AUTH, "请先登录");
+	}
+
+	private String getFromCookie(String key, Cookie[] cookies) {
+		String value = null;
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equalsIgnoreCase(key)) {
+					value = cookie.getValue();
+					break;
+				}
+			}
+		}
+		return value;
 	}
 
 	@Override

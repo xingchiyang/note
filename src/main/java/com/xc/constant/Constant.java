@@ -13,4 +13,5 @@ public class Constant {
 	public static final String FILE_DIR = System.getProperty("user.dir") + "/../upload";
 
 	public static final String TOKEN = "token";
+	public static final String USERID = "userId";
 }

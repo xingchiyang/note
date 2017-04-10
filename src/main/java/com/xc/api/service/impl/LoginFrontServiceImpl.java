@@ -7,6 +7,7 @@ import com.xc.constant.Constant;
 import com.xc.entity.User;
 import com.xc.logic.UserLogic;
 import com.xc.util.Des;
+import com.xc.util.GenerateUUID;
 import com.xc.util.RestReturnUtil;
 import com.xc.util.ValidateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,13 +43,14 @@ public class LoginFrontServiceImpl implements LoginFrontSerice {
 		ValidateUtil.validateTrue(userByUsername != null, "用户名不存在");
 		ValidateUtil.validateTrue(Des.encryptBasedDes(user.getPasswd()).equals(userByUsername.getPasswd()), "密码错误");
 
-		String apikey = userByUsername.getApikey();
-		loginCache.setToken(apikey, new Date().getTime());
-
-		Cookie cookie = new Cookie(Constant.TOKEN, apikey);
+		String token = GenerateUUID.getUUID32();
+		loginCache.setToken(token, new Date().getTime());
+		Cookie cookie = new Cookie(Constant.TOKEN, token);
 		cookie.setMaxAge(3600);
 		cookie.setPath("/");
 		response.addCookie(cookie);
+		Cookie userIdCookie = new Cookie(Constant.USERID, userByUsername.getId());
+		response.addCookie(userIdCookie);
 		return RestReturnUtil.toObject("status", "success");
 	}
 
