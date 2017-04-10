@@ -19,7 +19,7 @@ import java.util.Date;
  */
 @Component
 public class SecurityControlFilter implements Filter {
-	private String[] URL = new String[] { "/note/api/v1/system/login" };
+	private String[] URL = new String[] { "/note/api/v1/system/login", "/note/api/v1/user/create"};
 
 	@Autowired
 	private LoginCache loginCache;
