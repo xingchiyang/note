@@ -6,12 +6,10 @@ import com.xc.constant.Constant;
 import com.xc.entity.User;
 import com.xc.logic.UserLogic;
 import com.xc.util.RestReturnUtil;
+import com.xc.util.SecurityContextHolder;
 import com.xc.util.ValidateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Administrator on 2017/02/23 0023.
@@ -49,5 +47,12 @@ public class UserFrontServiceImpl implements UserFrontService {
 			return RestReturnUtil.toObject("id", user.getId());
 		}
 		return null;
+	}
+
+	@GetMapping("/get")
+	@Override
+	public String getUser() {
+		User user = userLogic.getUserById(SecurityContextHolder.getUserId());
+		return JSON.toJSONString(user);
 	}
 }

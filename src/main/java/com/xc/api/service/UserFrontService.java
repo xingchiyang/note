@@ -9,4 +9,6 @@ public interface UserFrontService {
 
 	public String modifyUser(String jsonString);
 
+	public String getUser();
+
 }
