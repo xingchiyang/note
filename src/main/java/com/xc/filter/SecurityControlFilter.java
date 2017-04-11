@@ -68,7 +68,7 @@ public class SecurityControlFilter implements Filter {
 		}
 	}
 
-	private void throw401Exception() {
+	private void throw401Exception( ) {
 		throw new NoteException(NoteExpCode.EXP_CODE_NOT_AUTH, "请先登录");
 	}
 
