@@ -34,7 +34,7 @@
                 read_key = #{readKey},
             </if>
             <if test="name != null">
-                `name` = #{name}
+                `name` = #{name},
             </if>
             <if test="email != null">
                 email = #{email},

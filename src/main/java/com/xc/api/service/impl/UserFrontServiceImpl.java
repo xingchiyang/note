@@ -5,10 +5,12 @@ import com.xc.api.service.UserFrontService;
 import com.xc.constant.Constant;
 import com.xc.entity.User;
 import com.xc.logic.UserLogic;
+import com.xc.util.Des;
 import com.xc.util.RestReturnUtil;
 import com.xc.util.SecurityContextHolder;
 import com.xc.util.ValidateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -37,6 +39,17 @@ public class UserFrontServiceImpl implements UserFrontService {
 	public String modifyUser(@RequestBody String jsonString) {
 		ValidateUtil.validateStrBlank(jsonString, "请求参数为空");
 		User user = JSON.parseObject(jsonString, User.class);
+		user.setId(SecurityContextHolder.getUserId());
+		User userById = userLogic.getUserById(SecurityContextHolder.getUserId());
+		if (userById == null) {
+			return null;
+		}
+		if (StringUtils.isEmpty(user.getUsername())) {
+			user.setUsername(userById.getUsername());
+		}
+		if (StringUtils.isEmpty(user.getPasswd())) {
+			user.setPasswd(Des.decryptBasedDes(userById.getPasswd()));
+		}
 		ValidateUtil.validateStrBlank(user.getUsername(), "用户名不能为空");
 		ValidateUtil.validateStrBlank(user.getPasswd(), "密码不能为空");
 		User userByUsername = userLogic.getUserByUsername(user.getUsername());
