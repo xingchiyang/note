@@ -46,13 +46,13 @@ public class LoginFrontServiceImpl implements LoginFrontSerice {
 		String token = GenerateUUID.getUUID32();
 		loginCache.setToken(token, new Date().getTime());
 		Cookie cookie = new Cookie(Constant.TOKEN, token);
-		response.addCookie(cookie);
 		cookie.setMaxAge(3600);
 		cookie.setPath("/");
+		response.addCookie(cookie);
 		Cookie userIdCookie = new Cookie(Constant.USERID, userByUsername.getId());
-		response.addCookie(userIdCookie);
 		userIdCookie.setMaxAge(3600);
 		userIdCookie.setPath("/");
+		response.addCookie(userIdCookie);
 		return RestReturnUtil.toObject("status", "success");
 	}
 
