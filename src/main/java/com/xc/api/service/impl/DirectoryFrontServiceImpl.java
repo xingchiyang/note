@@ -8,6 +8,7 @@ import com.xc.entity.Directory;
 import com.xc.logic.DirectoryLogic;
 import com.xc.util.JsonUtil;
 import com.xc.util.RestReturnUtil;
+import com.xc.util.SecurityContextHolder;
 import com.xc.util.ValidateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -32,6 +33,7 @@ public class DirectoryFrontServiceImpl implements DirectoryFrontService {
 		Directory directory = JSON.parseObject(jsonString, Directory.class);
 		ValidateUtil.validateStrBlank(directory.getName(), "目录名称为空");
 		directory.setStatus(DirConstant.STATUS_NORMAL);
+		directory.setUserId(SecurityContextHolder.getUserId());
 		String id = directoryLogic.createDir(directory);
 		return RestReturnUtil.toObject("id", id);
 	}
@@ -72,14 +74,16 @@ public class DirectoryFrontServiceImpl implements DirectoryFrontService {
 	@Override
 	@GetMapping(value = "query", consumes = "*/*")
 	public String getDirsByParentId(@RequestParam(value = "parentId", required = false) String parentId) {
-		List<Directory> dirs = directoryLogic.getDirsByParentIdStatus(parentId, Integer.valueOf(DirConstant.STATUS_NORMAL));
+		List<Directory> dirs = directoryLogic
+				.getDirsByParentIdStatusUserId(parentId, Integer.valueOf(DirConstant.STATUS_NORMAL),
+						SecurityContextHolder.getUserId());
 		return JsonUtil.includePropToJson(dirs);
 	}
 
 	@Override
 	@GetMapping(value = "clear/{id}", consumes = "*/*")
 	public void removeDir(@PathVariable String id) {
-		directoryLogic.removeDir(id);
+		directoryLogic.removeDir(id, SecurityContextHolder.getUserId());
 	}
 
 	@GetMapping(value = "remove/{id}", consumes = "*/*")

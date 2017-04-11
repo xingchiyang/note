@@ -11,6 +11,7 @@ import com.xc.logic.DirectoryLogic;
 import com.xc.logic.NoteLogic;
 import com.xc.util.Criterions;
 import com.xc.util.GenerateUUID;
+import com.xc.util.SecurityContextHolder;
 import com.xc.util.page.Pagination;
 import com.xc.util.page.SortConvert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,7 @@ public class NoteLogicImpl implements NoteLogic {
 		Date now = new Date();
 		note.setCreateTime(now);
 		note.setModifyTime(now);
+		note.setUserId(SecurityContextHolder.getUserId());
 		noteDao.insert(note);
 
 		updateAttach(note);
@@ -98,7 +100,7 @@ public class NoteLogicImpl implements NoteLogic {
 
 	@Override
 	public Pagination<Note> getNotesList(String name, String dirId, Integer type, Integer status, Integer page,
-			Integer size, String sortKey, Integer sortType) {
+			Integer size, String sortKey, Integer sortType, String userId) {
 		Criterions criterions = new Criterions();
 		Criterions.Criteria criteria = criterions.createCriteria();
 		if (!StringUtils.isEmpty(name)) {
@@ -116,6 +118,9 @@ public class NoteLogicImpl implements NoteLogic {
 		}
 		if (!StringUtils.isEmpty(status)) {
 			criteria.andColumnEqualTo("status", status);
+		}
+		if (!StringUtils.isEmpty(userId)) {
+			criteria.andColumnEqualTo("user_id", userId);
 		}
 		Integer total = noteDao.countNotesByCriterions(criterions);
 		Pagination<Note> p = new Pagination<Note>(page, size, total);
@@ -192,10 +197,10 @@ public class NoteLogicImpl implements NoteLogic {
 	}
 
 	@Override
-	public List<Note> getNotesByStatus(Integer status) {
+	public List<Note> getNotesByStatusUserId(Integer status, String userId) {
 		if (status == null)
 			return null;
-		return noteDao.selectNotesByStatus(status);
+		return noteDao.selectNotesByStatus(status, userId);
 	}
 
 }

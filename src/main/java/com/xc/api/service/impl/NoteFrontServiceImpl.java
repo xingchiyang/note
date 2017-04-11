@@ -7,6 +7,7 @@ import com.xc.entity.Note;
 import com.xc.logic.NoteLogic;
 import com.xc.util.JsonUtil;
 import com.xc.util.RestReturnUtil;
+import com.xc.util.SecurityContextHolder;
 import com.xc.util.ValidateUtil;
 import com.xc.util.page.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ public class NoteFrontServiceImpl implements NoteFrontService {
 		Note note = JSON.parseObject(jsonString, Note.class);
 		ValidateUtil.validateStrBlank(note.getTitle(), "笔记title不能为空");
 		ValidateUtil.validateIntNull(note.getType(), "类型不能为空");
+		note.setUserId(SecurityContextHolder.getUserId());
 		return RestReturnUtil.toObject("id", noteLogic.createNote(note));
 	}
 
@@ -62,7 +64,7 @@ public class NoteFrontServiceImpl implements NoteFrontService {
 			@RequestParam(value = "size", required = false) Integer size,
 			@RequestParam(value = "sortKey", required = false) String sortKey,
 			@RequestParam(value = "sortType", required = false) Integer sortType) {
-		Pagination<Note> notesList = noteLogic.getNotesList(name, dirId, type, status, page, size, sortKey, sortType);
+		Pagination<Note> notesList = noteLogic.getNotesList(name, dirId, type, status, page, size, sortKey, sortType, SecurityContextHolder.getUserId());
 		return JsonUtil.includePropToJson(notesList.formate());
 	}
 

@@ -14,13 +14,13 @@ public interface DirectoryLogic {
 
 	public Directory getDirById(String id);
 
-	public List<Directory> getDirsByParentIdStatus(String id, Integer status);
+	public List<Directory> getDirsByParentIdStatusUserId(String id, Integer status, String userId);
 
-	public void removeDir(String id);
+	public void removeDir(String id, String userId);
 
 	public void removeDirToRecycle(String id);
 
 	public void resumeDirFromRecycle(String id);
 
-	public List<Directory> getDirsByStatus(Integer status);
+	public List<Directory> getDirsByStatusUserId(Integer status, String userId);
 }

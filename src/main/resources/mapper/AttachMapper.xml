@@ -10,13 +10,14 @@
         <result property="uploadTime" column="upload_time" jdbcType="TIMESTAMP"/>
         <result property="size" column="size"/>
         <result property="noteId" column="note_id"/>
+        <result property="userId" column="user_id"/>
         <association property="note" column="note_id" select="com.xc.dao.NoteDao.selectNoteById"/>
     </resultMap>
 
     <insert id="insert" parameterType="com.xc.entity.Attach">
-      insert into attach(id,`name`,`type`,upload_time,`size`,note_id)
+      insert into attach(id,`name`,`type`,upload_time,`size`,note_id, user_id)
       values (
-        #{id},#{name},#{type},#{uploadTime,jdbcType=TIMESTAMP},#{size},#{noteId}
+        #{id},#{name},#{type},#{uploadTime,jdbcType=TIMESTAMP},#{size},#{noteId},#{userId}
       )
     </insert>
     <update id="update" parameterType="com.xc.entity.Attach">
@@ -36,6 +37,9 @@
             </if>
             <if test="noteId != null">
                 note_id = #{noteId},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
             </if>
         </set>
         WHERE id = #{id}

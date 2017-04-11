@@ -13,7 +13,7 @@ public interface TagLogic {
 
 	public Tag getTagById(String id);
 
-	public Pagination<Tag> getTagsList(String name, Integer type, Integer page, Integer size, String sortKey, Integer sortType);
+	public Pagination<Tag> getTagsList(String name, Integer type, Integer page, Integer size, String sortKey, Integer sortType, String userId);
 
 	public void removeTags(String ids);
 }

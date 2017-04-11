@@ -6,6 +6,7 @@ import com.xc.entity.Directory;
 import com.xc.logic.DirectoryLogic;
 import com.xc.logic.NoteLogic;
 import com.xc.util.GenerateUUID;
+import com.xc.util.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +32,7 @@ public class DirectoryLogicImpl implements DirectoryLogic {
 		Date date = new Date();
 		directory.setCreateTime(date);
 		directory.setModifyTime(date);
+		directory.setUserId(SecurityContextHolder.getUserId());
 		directoryDao.insert(directory);
 		return id;
 	}
@@ -58,21 +60,21 @@ public class DirectoryLogicImpl implements DirectoryLogic {
 	}
 
 	@Override
-	public List<Directory> getDirsByParentIdStatus(String id, Integer status) {
-		return directoryDao.selectDirsByParentIdStatus(id, status);
+	public List<Directory> getDirsByParentIdStatusUserId(String id, Integer status, String userId) {
+		return directoryDao.selectDirsByParentIdStatus(id, status, userId);
 	}
 
 	@Override
 	@Transactional
-	public void removeDir(String id) {
+	public void removeDir(String id, String userId) {
 		if (StringUtils.isEmpty(id)) {
 			return;
 		}
 		// 删除子目录及子目录下面的笔记
-		List<Directory> subDirs = getDirsByParentIdStatus(id, Integer.valueOf(DirConstant.STATUS_DELETED));
+		List<Directory> subDirs = getDirsByParentIdStatusUserId(id, Integer.valueOf(DirConstant.STATUS_DELETED), userId);
 		if (subDirs != null && subDirs.size() > 0) {
 			for (Directory subDir : subDirs) {
-				removeDir(subDir.getId());
+				removeDir(subDir.getId(), userId);
 			}
 		}
 		// 删除目录下的笔记
@@ -108,10 +110,10 @@ public class DirectoryLogicImpl implements DirectoryLogic {
 	}
 
 	@Override
-	public List<Directory> getDirsByStatus(Integer status) {
+	public List<Directory> getDirsByStatusUserId(Integer status, String userId) {
 		if (status == null) {
 			return null;
 		}
-		return directoryDao.selectDirsByStatus(status);
+		return directoryDao.selectDirsByStatus(status, userId);
 	}
 }

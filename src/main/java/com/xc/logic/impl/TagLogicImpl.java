@@ -5,6 +5,7 @@ import com.xc.entity.Tag;
 import com.xc.logic.TagLogic;
 import com.xc.util.Criterions;
 import com.xc.util.GenerateUUID;
+import com.xc.util.SecurityContextHolder;
 import com.xc.util.page.Pagination;
 import com.xc.util.page.SortConvert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ public class TagLogicImpl implements TagLogic {
 		Date date = new Date();
 		tag.setCreateTime(date);
 		tag.setModifyTime(date);
+		tag.setUserId(SecurityContextHolder.getUserId());
 		tagDao.insert(tag);
 		return id;
 	}
@@ -59,7 +61,7 @@ public class TagLogicImpl implements TagLogic {
 
 	@Override
 	public Pagination<Tag> getTagsList(String name, Integer type, Integer page, Integer size, String sortKey,
-			Integer sortType) {
+			Integer sortType, String userId) {
 		Criterions criterions = new Criterions();
 		Criterions.Criteria criteria = criterions.createCriteria();
 		if (!StringUtils.isEmpty(name)) {
@@ -69,6 +71,9 @@ public class TagLogicImpl implements TagLogic {
 		}
 		if (!StringUtils.isEmpty(type)) {
 			criteria.andColumnEqualTo("type", type);
+		}
+		if (!StringUtils.isEmpty(userId)) {
+			criteria.andColumnEqualTo("user_id", userId);
 		}
 		Integer total = tagDao.countTagsByCriterions(criterions);
 		Pagination<Tag> p = new Pagination<Tag>(page, size, total);

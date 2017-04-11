@@ -61,12 +61,24 @@
         <if test="status != null">
             and status = #{status}
         </if>
+        <if test="userId == null">
+            and user_id is null
+        </if>
+        <if test="userId != null">
+            and user_id =#{userId}
+        </if>
         order by modify_time desc
     </select>
 
     <select id="selectDirsByStatus" resultMap="dirResultMap">
         select * from dir
         where status = #{status}
+        <if test="userId == null">
+            and user_id is null
+        </if>
+        <if test="userId != null">
+            and user_id = #{userId}
+        </if>
     </select>
 
     <delete id="delete">

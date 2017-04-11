@@ -17,7 +17,7 @@ public interface AttachLogic {
 
 	public List<Attach> getAttachByNoteId(String noteId);
 
-	public Pagination<Attach> getAttachsList(String name, String type, Integer page, Integer size, String sortKey, Integer sortType);
+	public Pagination<Attach> getAttachsList(String name, String type, Integer page, Integer size, String sortKey, Integer sortType, String userId);
 
 	public void removeAttach(String id);
 

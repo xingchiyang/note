@@ -7,6 +7,7 @@ import com.xc.entity.Tag;
 import com.xc.logic.TagLogic;
 import com.xc.util.JsonUtil;
 import com.xc.util.RestReturnUtil;
+import com.xc.util.SecurityContextHolder;
 import com.xc.util.ValidateUtil;
 import com.xc.util.page.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,10 @@ public class TagFrontServiceImpl implements TagFrontService {
 		Tag tag = JSON.parseObject(jsonString, Tag.class);
 		ValidateUtil.validateStrBlank(tag.getName(), "标签name不能为空");
 		ValidateUtil.validateIntNull(tag.getType(), "标签type不能为空");
-		Pagination<Tag> tagsList = tagLogic.getTagsList(tag.getName(), null, null, null, null, null);
+		Pagination<Tag> tagsList = tagLogic
+				.getTagsList(tag.getName(), null, null, null, null, null, SecurityContextHolder.getUserId());
 		ValidateUtil.validateTrue(tagsList.getData().size() <= 0, "存在同名标签");
+		tag.setUserId(SecurityContextHolder.getUserId());
 		return RestReturnUtil.toObject("id", tagLogic.createTag(tag));
 	}
 
@@ -41,7 +44,8 @@ public class TagFrontServiceImpl implements TagFrontService {
 		Tag tag = JSON.parseObject(jsonString, Tag.class);
 		ValidateUtil.validateStrBlank(tag.getId(), "标签id不能为空");
 		ValidateUtil.validateStrBlank(tag.getName(), "标签name不能为空");
-		Pagination<Tag> tagsList = tagLogic.getTagsList(tag.getName(), null, null, null, null, null);
+		Pagination<Tag> tagsList = tagLogic
+				.getTagsList(tag.getName(), null, null, null, null, null, SecurityContextHolder.getUserId());
 		if (tagsList.getData().size() > 0) {
 			ValidateUtil.validateTrue(tagsList.getData().get(0).getId().equals(tag.getId()), "存在同名标签");
 		}
@@ -66,7 +70,8 @@ public class TagFrontServiceImpl implements TagFrontService {
 			@RequestParam(value = "size", required = false) Integer size,
 			@RequestParam(value = "sortKey", required = false) String sortKey,
 			@RequestParam(value = "sortType", required = false) Integer sortType) {
-		Pagination<Tag> tagsList = tagLogic.getTagsList(name, type, page, size, sortKey, sortType);
+		Pagination<Tag> tagsList = tagLogic
+				.getTagsList(name, type, page, size, sortKey, sortType, SecurityContextHolder.getUserId());
 		return JsonUtil.includePropToJson(tagsList.formate());
 	}
 

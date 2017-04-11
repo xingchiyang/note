@@ -7,6 +7,7 @@ import com.xc.entity.Attach;
 import com.xc.logic.AttachLogic;
 import com.xc.util.GenerateUUID;
 import com.xc.util.JsonUtil;
+import com.xc.util.SecurityContextHolder;
 import com.xc.util.page.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -39,6 +40,7 @@ public class AttachFrontServiceImpl implements AttachFrontService {
 		attach.setName(fileInfo.getName());
 		attach.setType(type);
 		attach.setSize(fileInfo.getSize());
+		attach.setUserId(SecurityContextHolder.getUserId());
 		attachLogic.createAttach(attach);
 
 		JSONObject ret = new JSONObject();
@@ -165,7 +167,8 @@ public class AttachFrontServiceImpl implements AttachFrontService {
 			@RequestParam(value = "size", required = false) Integer size,
 			@RequestParam(value = "sortKey", required = false) String sortKey,
 			@RequestParam(value = "sortType", required = false) Integer sortType) {
-		Pagination<Attach> p = attachLogic.getAttachsList(name, type, page, size, sortKey, sortType);
+		Pagination<Attach> p = attachLogic
+				.getAttachsList(name, type, page, size, sortKey, sortType, SecurityContextHolder.getUserId());
 		return JsonUtil.includePropToJson(p.formate());
 	}
 

@@ -73,6 +73,7 @@ CREATE TABLE `attach` (
   `upload_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `size` bigint(20) DEFAULT NULL,
   `note_id` varchar(255) DEFAULT NULL,
+  `user_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

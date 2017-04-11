@@ -12,6 +12,7 @@ import com.xc.entity.Note;
 import com.xc.logic.DirectoryLogic;
 import com.xc.logic.NoteLogic;
 import com.xc.util.JsonUtil;
+import com.xc.util.SecurityContextHolder;
 import com.xc.util.page.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,9 +41,11 @@ public class FileFrontServiceImpl implements FileFrontService {
 			id = null;
 		}
 		Directory directory = dirLogic.getDirById(id);
-		List<Directory> dirs = dirLogic.getDirsByParentIdStatus(id, Integer.valueOf(DirConstant.STATUS_NORMAL));
+		List<Directory> dirs = dirLogic.getDirsByParentIdStatusUserId(id, Integer.valueOf(DirConstant.STATUS_NORMAL),
+				SecurityContextHolder.getUserId());
 		Pagination<Note> pagination = noteLogic
-				.getNotesList(null, id, null, 1, NoteConstant.STATUS_NORMAL, Integer.MAX_VALUE, null, null);
+				.getNotesList(null, id, null, 1, NoteConstant.STATUS_NORMAL, Integer.MAX_VALUE, null, null,
+						SecurityContextHolder.getUserId());
 		List<Note> notes = pagination.getData();
 
 		JSONArray ret = new JSONArray();
@@ -93,13 +96,15 @@ public class FileFrontServiceImpl implements FileFrontService {
 		JSONArray notes = new JSONArray();
 		ret.put("dirs", dirs);
 		ret.put("notes", notes);
-		List<Directory> dirsByStatus = dirLogic.getDirsByStatus(DirConstant.STATUS_DELETED);
+		List<Directory> dirsByStatus = dirLogic
+				.getDirsByStatusUserId(DirConstant.STATUS_DELETED, SecurityContextHolder.getUserId());
 		if (dirsByStatus != null && dirsByStatus.size() > 0) {
 			for (Directory dir : dirsByStatus) {
 				dirs.add(JSON.toJSON(dir));
 			}
 		}
-		List<Note> notesByStatus = noteLogic.getNotesByStatus(DirConstant.STATUS_DELETED);
+		List<Note> notesByStatus = noteLogic
+				.getNotesByStatusUserId(DirConstant.STATUS_DELETED, SecurityContextHolder.getUserId());
 		if (notesByStatus != null && notesByStatus.size() > 0) {
 			for (Note note : notesByStatus) {
 				notes.add(JSON.toJSON(note));
@@ -111,13 +116,15 @@ public class FileFrontServiceImpl implements FileFrontService {
 	@GetMapping(value = "/recycle/empty", consumes = "*/*")
 	@Override
 	public String clearAllFromRecycle() {
-		List<Directory> dirsByStatus = dirLogic.getDirsByStatus(DirConstant.STATUS_DELETED);
+		List<Directory> dirsByStatus = dirLogic
+				.getDirsByStatusUserId(DirConstant.STATUS_DELETED, SecurityContextHolder.getUserId());
 		if (dirsByStatus != null && dirsByStatus.size() > 0) {
 			for (Directory dir : dirsByStatus) {
-				dirLogic.removeDir(dir.getId());
+				dirLogic.removeDir(dir.getId(), SecurityContextHolder.getUserId());
 			}
 		}
-		List<Note> notesByStatus = noteLogic.getNotesByStatus(DirConstant.STATUS_DELETED);
+		List<Note> notesByStatus = noteLogic
+				.getNotesByStatusUserId(DirConstant.STATUS_DELETED, SecurityContextHolder.getUserId());
 		if (notesByStatus != null && notesByStatus.size() > 0) {
 			for (Note note : notesByStatus) {
 				noteLogic.clearNotes(note.getId());

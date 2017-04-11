@@ -103,5 +103,11 @@
 
     <select id="selectNotesByStatus" resultMap="noteResultMap">
         select * from note where status = #{status}
+        <if test="userId == null">
+            and user_id is null
+        </if>
+        <if test="userId != null">
+            and user_id = #{userId}
+        </if>
     </select>
 </mapper>
