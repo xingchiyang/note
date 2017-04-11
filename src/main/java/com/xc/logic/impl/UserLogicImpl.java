@@ -41,9 +41,9 @@ public class UserLogicImpl implements UserLogic {
 		userById.setName(user.getName());
 		userById.setEmail(user.getEmail());
 		userById.setPasswd(Des.encryptBasedDes(user.getPasswd()));
-		userById.setReadKey(user.getReadKey());
+		userById.setReadKey(Des.encryptBasedDes(user.getReadKey()));
 		userById.setTelephone(user.getTelephone());
-		userDao.update(user);
+		userDao.update(userById);
 		return true;
 	}
 

@@ -43,7 +43,7 @@
                 telephone = #{telephone},
             </if>
             <if test="type != null">
-                `type` = type
+                `type` = #{type},
             </if>
             <if test="apikey != null">
                 apikey = #{apikey},
