@@ -68,4 +68,41 @@ public class UserFrontServiceImpl implements UserFrontService {
 		User user = userLogic.getUserById(SecurityContextHolder.getUserId());
 		return JSON.toJSONString(user);
 	}
+
+	@Override
+	@GetMapping("/passwd/change")
+	public String changePasswd(String jsonString) {
+		return null;
+	}
+
+	class PasswdInfo {
+		private Integer type;
+		private String oldPasswd;
+		private String newPasswd;
+
+		public Integer getType() {
+			return type;
+		}
+
+		public void setType(Integer type) {
+			this.type = type;
+		}
+
+		public String getOldPasswd() {
+			return oldPasswd;
+		}
+
+		public void setOldPasswd(String oldPasswd) {
+			this.oldPasswd = oldPasswd;
+		}
+
+		public String getNewPasswd() {
+			return newPasswd;
+		}
+
+		public void setNewPasswd(String newPasswd) {
+			this.newPasswd = newPasswd;
+		}
+	}
+
 }

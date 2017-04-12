@@ -11,4 +11,6 @@ public interface UserFrontService {
 
 	public String getUser();
 
+	public String changePasswd(String jsonString);
+
 }
