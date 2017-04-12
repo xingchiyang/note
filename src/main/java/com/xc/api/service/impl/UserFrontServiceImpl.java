@@ -73,7 +73,6 @@ public class UserFrontServiceImpl implements UserFrontService {
 		ValidateUtil.validateStrBlank(jsonString, "请求参数为空");
 		PasswdInfo passwdInfo = JSON.parseObject(jsonString, PasswdInfo.class);
 		ValidateUtil.validateStrBlank(passwdInfo.getNewPasswd(), "密码不能为空");
-		ValidateUtil.validateStrBlank(passwdInfo.getOldPasswd(), "密码不能为空");
 		User userById = userLogic.getUserById(SecurityContextHolder.getUserId());
 		if (UserConstant.PASSWD_LOGIN == passwdInfo.getType()) {
 			ValidateUtil.validateTrue(userById.getPasswd().equals(Des.encryptBasedDes(passwdInfo.getOldPasswd())), "密码不正确");
