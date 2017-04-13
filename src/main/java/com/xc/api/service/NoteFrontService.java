@@ -18,4 +18,6 @@ public interface NoteFrontService {
 	public void clearNotes(String ids);
 
 	public void resumeNote(String id);
+
+
 }

@@ -1,9 +1,9 @@
 package com.xc.constant;
 
 /**
- * Created by Administrator on 2017/04/06 0006.
+ * Created by yb on 2017/4/13 0013.
  */
-public class DirConstant {
+public class FileConstant {
 	/**
 	 * 笔记的状态，1：正常状态，2：已删除
 	 */

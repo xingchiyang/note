@@ -3,7 +3,7 @@ package com.xc.api.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.xc.api.service.DirectoryFrontService;
 import com.xc.constant.Constant;
-import com.xc.constant.DirConstant;
+import com.xc.constant.FileConstant;
 import com.xc.entity.Directory;
 import com.xc.logic.DirectoryLogic;
 import com.xc.util.JsonUtil;
@@ -32,7 +32,7 @@ public class DirectoryFrontServiceImpl implements DirectoryFrontService {
 		ValidateUtil.validateStrBlank(jsonString, "请求参数为空");
 		Directory directory = JSON.parseObject(jsonString, Directory.class);
 		ValidateUtil.validateStrBlank(directory.getName(), "目录名称为空");
-		directory.setStatus(DirConstant.STATUS_NORMAL);
+		directory.setStatus(FileConstant.STATUS_NORMAL);
 		directory.setUserId(SecurityContextHolder.getUserId());
 		String id = directoryLogic.createDir(directory);
 		return RestReturnUtil.toObject("id", id);
@@ -75,7 +75,7 @@ public class DirectoryFrontServiceImpl implements DirectoryFrontService {
 	@GetMapping(value = "query", consumes = "*/*")
 	public String getDirsByParentId(@RequestParam(value = "parentId", required = false) String parentId) {
 		List<Directory> dirs = directoryLogic
-				.getDirsByParentIdStatusUserId(parentId, Integer.valueOf(DirConstant.STATUS_NORMAL),
+				.getDirsByParentIdStatusUserId(parentId, Integer.valueOf(FileConstant.STATUS_NORMAL),
 						SecurityContextHolder.getUserId());
 		return JsonUtil.includePropToJson(dirs);
 	}

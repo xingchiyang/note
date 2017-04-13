@@ -1,7 +1,7 @@
 package com.xc.logic.impl;
 
 import com.xc.constant.Constant;
-import com.xc.constant.NoteConstant;
+import com.xc.constant.FileConstant;
 import com.xc.dao.NoteDao;
 import com.xc.entity.Attach;
 import com.xc.entity.Directory;
@@ -45,7 +45,7 @@ public class NoteLogicImpl implements NoteLogic {
 		}
 		String id = GenerateUUID.getUUID32();
 		note.setId(id);
-		note.setStatus(NoteConstant.STATUS_NORMAL);
+		note.setStatus(FileConstant.STATUS_NORMAL);
 		note.setDirId(note.getDirId());
 		Date now = new Date();
 		note.setCreateTime(now);
@@ -176,7 +176,7 @@ public class NoteLogicImpl implements NoteLogic {
 			return;
 		Note note = noteDao.selectNoteById(id);
 		if (note != null) {
-			note.setStatus(NoteConstant.STATUS_NORMAL);
+			note.setStatus(FileConstant.STATUS_NORMAL);
 			noteDao.update(note);
 		}
 	}

@@ -1,6 +1,6 @@
 package com.xc.logic.impl;
 
-import com.xc.constant.DirConstant;
+import com.xc.constant.FileConstant;
 import com.xc.dao.DirectoryDao;
 import com.xc.entity.Directory;
 import com.xc.logic.DirectoryLogic;
@@ -71,7 +71,7 @@ public class DirectoryLogicImpl implements DirectoryLogic {
 			return;
 		}
 		// 删除子目录及子目录下面的笔记
-		List<Directory> subDirs = getDirsByParentIdStatusUserId(id, Integer.valueOf(DirConstant.STATUS_DELETED), userId);
+		List<Directory> subDirs = getDirsByParentIdStatusUserId(id, Integer.valueOf(FileConstant.STATUS_DELETED), userId);
 		if (subDirs != null && subDirs.size() > 0) {
 			for (Directory subDir : subDirs) {
 				removeDir(subDir.getId(), userId);
@@ -92,7 +92,7 @@ public class DirectoryLogicImpl implements DirectoryLogic {
 		// 只将目录放入回收站，子目录和笔记状态不变
 		Directory dir = directoryDao.selectDirById(id);
 		if (dir != null) {
-			dir.setStatus(DirConstant.STATUS_DELETED);
+			dir.setStatus(FileConstant.STATUS_DELETED);
 			directoryDao.update(dir);
 		}
 	}
@@ -104,7 +104,7 @@ public class DirectoryLogicImpl implements DirectoryLogic {
 		}
 		Directory dir = directoryDao.selectDirById(id);
 		if (dir != null) {
-			dir.setStatus(DirConstant.STATUS_NORMAL);
+			dir.setStatus(FileConstant.STATUS_NORMAL);
 			directoryDao.update(dir);
 		}
 	}

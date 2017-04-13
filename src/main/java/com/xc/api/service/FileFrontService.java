@@ -11,4 +11,8 @@ public interface FileFrontService {
 
 	public String clearAllFromRecycle();
 
+	public String setReadKey(int fileType, String fileId);
+
+	public String cancelReadKey(int fileType, String fileId, String readKey);
+
 }
