@@ -39,12 +39,13 @@ public class FileFrontServiceImpl implements FileFrontService {
 
 	@Override
 	@PostMapping(value = "/query", consumes = "*/*")
-	public String getFileByDirId(@RequestParam(value = "id", required = false) String id, @RequestBody String readKey) {
+	public String getFileByDirId(@RequestBody String jsonStr) {
+		String id = getRequestParamByKey(jsonStr, "id");
 		// 兼容jstree传过来的根节点id
 		if ("#".equals(id)) {
 			id = null;
 		}
-		String readKeyStr = getReadKey(readKey);
+		String readKeyStr = getRequestParamByKey(jsonStr, "readKey");
 		Directory directory = dirLogic.getDirById(id);
 		List<Directory> dirs = null;
 		List<Note> notes = null;
@@ -120,12 +121,12 @@ public class FileFrontServiceImpl implements FileFrontService {
 		return JsonUtil.includePropToJson(root);
 	}
 
-	private String getReadKey(String readKeyStr) {
-		if (StringUtils.isEmpty(readKeyStr)) {
+	private String getRequestParamByKey(String jsonStr, String key) {
+		if (StringUtils.isEmpty(jsonStr)) {
 			return null;
 		}
-		JSONObject readKeyObj = JSON.parseObject(readKeyStr);
-		return readKeyObj.getString("readKey");
+		JSONObject json = JSON.parseObject(jsonStr);
+		return json.getString(key);
 	}
 
 	private String getUserReadKey() {
