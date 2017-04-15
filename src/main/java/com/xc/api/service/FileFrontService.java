@@ -5,7 +5,7 @@ package com.xc.api.service;
  */
 public interface FileFrontService {
 
-	public String getFileByDirId(String id);
+	public String getFileByDirId(String id, String readKey);
 
 	public String getFileInRecycle();
 

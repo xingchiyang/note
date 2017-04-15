@@ -1,14 +1,15 @@
 package com.xc.api.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.xc.api.service.NoteFrontService;
 import com.xc.constant.Constant;
+import com.xc.constant.FileConstant;
 import com.xc.entity.Note;
+import com.xc.entity.User;
 import com.xc.logic.NoteLogic;
-import com.xc.util.JsonUtil;
-import com.xc.util.RestReturnUtil;
-import com.xc.util.SecurityContextHolder;
-import com.xc.util.ValidateUtil;
+import com.xc.logic.UserLogic;
+import com.xc.util.*;
 import com.xc.util.page.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 public class NoteFrontServiceImpl implements NoteFrontService {
 	@Autowired
 	private NoteLogic noteLogic;
+	@Autowired
+	private UserLogic userLogic;
 
 	@PostMapping("/create")
 	@Override
@@ -47,11 +50,29 @@ public class NoteFrontServiceImpl implements NoteFrontService {
 		return null;
 	}
 
-	@GetMapping(value = "/get/{id}", consumes = "*/*")
+	@PostMapping(value = "/get/{id}", consumes = "*/*")
 	@Override
-	public String getNote(@PathVariable String id) {
+	public String getNote(@PathVariable String id, @RequestBody String readKey) {
 		Note note = noteLogic.getNoteById(id);
+		if (FileConstant.STATUS_ENCRYPTED == note.getStatus()) {
+			if (getReadKey(readKey) == null || !Des.encryptBasedDes(getReadKey(readKey)).equals(getUserReadKey())) {
+				return JsonUtil.includePropToJson(null);
+			}
+		}
 		return JsonUtil.includePropToJson(note);
+	}
+
+	private String getReadKey(String readKeyStr) {
+		if (StringUtils.isEmpty(readKeyStr)) {
+			return null;
+		}
+		JSONObject readKeyObj = JSON.parseObject(readKeyStr);
+		return readKeyObj.getString("readKey");
+	}
+
+	private String getUserReadKey() {
+		User user = userLogic.getUserById(SecurityContextHolder.getUserId());
+		return user.getReadKey();
 	}
 
 	@GetMapping(value = "/query", consumes = "*/*")
@@ -64,7 +85,8 @@ public class NoteFrontServiceImpl implements NoteFrontService {
 			@RequestParam(value = "size", required = false) Integer size,
 			@RequestParam(value = "sortKey", required = false) String sortKey,
 			@RequestParam(value = "sortType", required = false) Integer sortType) {
-		Pagination<Note> notesList = noteLogic.getNotesList(name, dirId, type, status, page, size, sortKey, sortType, SecurityContextHolder.getUserId());
+		Pagination<Note> notesList = noteLogic
+				.getNotesList(name, dirId, type, status, page, size, sortKey, sortType, SecurityContextHolder.getUserId());
 		return JsonUtil.includePropToJson(notesList.formate());
 	}
 

@@ -8,12 +8,18 @@ import com.xc.constant.Constant;
 import com.xc.constant.FileConstant;
 import com.xc.entity.Directory;
 import com.xc.entity.Note;
+import com.xc.entity.User;
+import com.xc.exception.NoteException;
+import com.xc.exception.NoteExpCode;
 import com.xc.logic.DirectoryLogic;
 import com.xc.logic.NoteLogic;
+import com.xc.logic.UserLogic;
+import com.xc.util.Des;
 import com.xc.util.JsonUtil;
 import com.xc.util.SecurityContextHolder;
-import com.xc.util.page.Pagination;
+import com.xc.util.ValidateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,29 +34,51 @@ public class FileFrontServiceImpl implements FileFrontService {
 	private DirectoryLogic dirLogic;
 	@Autowired
 	private NoteLogic noteLogic;
+	@Autowired
+	private UserLogic userLogic;
 
 	@Override
-	@GetMapping(value = "/query", consumes = "*/*")
-	public String getFileByDirId(@RequestParam(value = "id", required = false) String id) {
+	@PostMapping(value = "/query", consumes = "*/*")
+	public String getFileByDirId(@RequestParam(value = "id", required = false) String id, @RequestBody String readKey) {
 		// 兼容jstree传过来的根节点id
 		if ("#".equals(id)) {
 			id = null;
 		}
+		String readKeyStr = getReadKey(readKey);
 		Directory directory = dirLogic.getDirById(id);
-		List<Directory> dirs = dirLogic.getDirsByParentIdStatusUserId(id, Integer.valueOf(FileConstant.STATUS_NORMAL),
-				SecurityContextHolder.getUserId());
-		Pagination<Note> pagination = noteLogic
-				.getNotesList(null, id, null, 1, FileConstant.STATUS_NORMAL, Integer.MAX_VALUE, null, null,
-						SecurityContextHolder.getUserId());
-		List<Note> notes = pagination.getData();
+		List<Directory> dirs = null;
+		List<Note> notes = null;
+		if (FileConstant.STATUS_ENCRYPTED == directory.getStatus()) {
+			if (readKeyStr == null) {
+				dirs = null;
+				notes = null;
+			} else {
+				if (!Des.encryptBasedDes(readKeyStr).equals(getUserReadKey())) {
+					throw new NoteException(NoteExpCode.EXP_CODE_PARAM, "密码错误");
+				} else {
+					dirs = dirLogic.getDirsByParentIdStatusUserId(id, Integer.valueOf(FileConstant.STATUS_NORMAL),
+							SecurityContextHolder.getUserId());
+					notes = noteLogic.getNoteListByDirId(id);
+				}
+			}
+		} else {
+			dirs = dirLogic.getDirsByParentIdStatusUserId(id, Integer.valueOf(FileConstant.STATUS_NORMAL),
+					SecurityContextHolder.getUserId());
+			notes = noteLogic.getNoteListByDirId(id);
+		}
 
 		JSONArray ret = new JSONArray();
 		if (dirs != null && dirs.size() > 0) {
 			for (Directory dir : dirs) {
 				JSONObject object = new JSONObject();
+				Directory dirById = dirLogic.getDirById(dir.getId());
 				object.put("id", dir.getId());
 				object.put("text", dir.getName());
-				object.put("icon", "../../images/dir.png");
+				if (FileConstant.STATUS_ENCRYPTED == dirById.getStatus()) {
+					object.put("icon", "../../images/dirLocked.png");
+				} else {
+					object.put("icon", "../../images/dir.png");
+				}
 				object.put("children", true);
 				JSONObject aAttr = new JSONObject();
 				aAttr.put("isDir", true);
@@ -63,7 +91,11 @@ public class FileFrontServiceImpl implements FileFrontService {
 				JSONObject object = new JSONObject();
 				object.put("id", note.getId());
 				object.put("text", note.getTitle());
-				object.put("icon", "../../images/file.png");
+				if (FileConstant.STATUS_ENCRYPTED == note.getStatus()) {
+					object.put("icon", "../../images/fileLocked.png");
+				} else {
+					object.put("icon", "../../images/file.png");
+				}
 				JSONObject aAttr = new JSONObject();
 				aAttr.put("isDir", false);
 				object.put("a_attr", aAttr);
@@ -73,7 +105,11 @@ public class FileFrontServiceImpl implements FileFrontService {
 		JSONObject root = new JSONObject();
 		root.put("id", id);
 		root.put("text", id == null ? "我的文件" : (directory != null ? directory.getName() : ""));
-		root.put("icon", "../../images/dir.png");
+		if (FileConstant.STATUS_ENCRYPTED == directory.getStatus()) {
+			root.put("icon", "../../images/dirLocked.png");
+		} else {
+			root.put("icon", "../../images/dir.png");
+		}
 		JSONObject state = new JSONObject();
 		state.put("opened", true);
 		root.put("state", state);
@@ -82,6 +118,19 @@ public class FileFrontServiceImpl implements FileFrontService {
 		aAttr.put("isDir", true);
 		root.put("a_attr", aAttr);
 		return JsonUtil.includePropToJson(root);
+	}
+
+	private String getReadKey(String readKeyStr) {
+		if (StringUtils.isEmpty(readKeyStr)) {
+			return null;
+		}
+		JSONObject readKeyObj = JSON.parseObject(readKeyStr);
+		return readKeyObj.getString("readKey");
+	}
+
+	private String getUserReadKey() {
+		User user = userLogic.getUserById(SecurityContextHolder.getUserId());
+		return user.getReadKey();
 	}
 
 	@Override
@@ -132,13 +181,39 @@ public class FileFrontServiceImpl implements FileFrontService {
 	@Override
 	@GetMapping(value = "/readKey/set", consumes = "*/*")
 	public String setReadKey(@RequestParam("fileType") int fileType, @RequestParam("fileId") String fileId) {
-		return null;
+		ValidateUtil.validateStrBlank(fileId, "文件id为空");
+		if (FileConstant.FILE_TYPE_NOTE == fileType) {
+			Note note = noteLogic.getNoteById(fileId);
+			note.setStatus(FileConstant.STATUS_ENCRYPTED);
+			noteLogic.modifyNote(note);
+		} else if (FileConstant.FILE_TYPE_DIR == fileType) {
+			Directory dir = dirLogic.getDirById(fileId);
+			dir.setStatus(FileConstant.STATUS_ENCRYPTED);
+			dirLogic.modifyDir(dir);
+		}
+		return JsonUtil.includePropToJson(null);
 	}
 
 	@Override
 	@PostMapping(value = "/readKey/cancel", consumes = "*/*")
 	public String cancelReadKey(@RequestParam("fileType") int fileType, @RequestParam("fileId") String fileId,
 			@RequestBody String readKey) {
-		return null;
+		ValidateUtil.validateStrBlank(fileId, "文件id为空");
+		ValidateUtil.validateStrBlank(readKey, "阅读密码为空");
+		JSONObject readKeyObj = JSON.parseObject(readKey);
+		String readKeyStr = readKeyObj.getString("readKey");
+		if (!Des.encryptBasedDes(readKeyStr).equals(getUserReadKey())) {
+			throw new NoteException(NoteExpCode.EXP_CODE_PARAM, "密码错误");
+		}
+		if (FileConstant.FILE_TYPE_NOTE == fileType) {
+			Note note = noteLogic.getNoteById(fileId);
+			note.setStatus(FileConstant.STATUS_NORMAL);
+			noteLogic.modifyNote(note);
+		} else if (FileConstant.FILE_TYPE_DIR == fileType) {
+			Directory dir = dirLogic.getDirById(fileId);
+			dir.setStatus(FileConstant.STATUS_NORMAL);
+			dirLogic.modifyDir(dir);
+		}
+		return JsonUtil.includePropToJson(null);
 	}
 }

@@ -8,7 +8,7 @@ public interface NoteFrontService {
 
 	public String modifyNote(String jsonString);
 
-	public String getNote(String id);
+	public String getNote(String id, String readKey);
 
 	public String getNotesList(String name, String dirId, Integer type, Integer status, Integer page, Integer size, String sortKey,
 			Integer sortType);
