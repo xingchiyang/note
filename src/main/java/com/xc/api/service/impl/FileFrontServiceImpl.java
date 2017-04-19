@@ -42,14 +42,14 @@ public class FileFrontServiceImpl implements FileFrontService {
 	public String getFileByDirId(@RequestBody String jsonStr) {
 		String id = getRequestParamByKey(jsonStr, "id");
 		// 兼容jstree传过来的根节点id
-		if ("#".equals(id)) {
+		if (StringUtils.isEmpty(id)) {
 			id = null;
 		}
 		String readKeyStr = getRequestParamByKey(jsonStr, "readKey");
 		Directory directory = dirLogic.getDirById(id);
 		List<Directory> dirs = null;
 		List<Note> notes = null;
-		if (FileConstant.STATUS_ENCRYPTED == directory.getStatus()) {
+		if (directory != null && FileConstant.STATUS_ENCRYPTED == directory.getStatus()) {
 			if (readKeyStr == null) {
 				dirs = null;
 				notes = null;
@@ -106,7 +106,7 @@ public class FileFrontServiceImpl implements FileFrontService {
 		JSONObject root = new JSONObject();
 		root.put("id", id);
 		root.put("text", id == null ? "我的文件" : (directory != null ? directory.getName() : ""));
-		if (FileConstant.STATUS_ENCRYPTED == directory.getStatus()) {
+		if (directory != null && FileConstant.STATUS_ENCRYPTED == directory.getStatus()) {
 			root.put("icon", "../../images/dirLocked.png");
 		} else {
 			root.put("icon", "../../images/dir.png");
@@ -125,8 +125,14 @@ public class FileFrontServiceImpl implements FileFrontService {
 		if (StringUtils.isEmpty(jsonStr)) {
 			return null;
 		}
-		JSONObject json = JSON.parseObject(jsonStr);
-		return json.getString(key);
+		String[] split = jsonStr.split(";");
+		for (String s : split) {
+			String[] split1 = s.split("=", 2);
+			if (split1[0].equals(key)) {
+				return split1[1];
+			}
+		}
+		return null;
 	}
 
 	private String getUserReadKey() {
