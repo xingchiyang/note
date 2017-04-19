@@ -191,15 +191,11 @@ public class NoteLogicImpl implements NoteLogic {
 
 	@Override
 	public List<Note> getNoteListByDirId(String dirId) {
-		if (StringUtils.isEmpty(dirId))
-			return null;
 		return noteDao.selectNotesByDirId(dirId);
 	}
 
 	@Override
 	public List<Note> getNoteListByDirIdStatus(String dirId, Integer status) {
-		if (StringUtils.isEmpty(dirId))
-			return null;
 		return noteDao.selectNotesByDirIdStatus(dirId, status);
 	}
 

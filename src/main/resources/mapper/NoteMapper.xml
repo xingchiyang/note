@@ -98,11 +98,23 @@
     </delete>
 
     <select id="selectNotesByDirId" resultMap="noteResultMap">
-        select * from note where dir_id = #{dirId}
+        select * from note where
+        <if test="dirId != null">
+            dir_id = #{dirId}
+        </if>
+        <if test="dirId == null">
+            dir_id is null
+        </if>
     </select>
 
     <select id="selectNotesByDirIdStatus" resultMap="noteResultMap">
-        select * from note where dir_id = #{dirId}
+        select * from note where
+        <if test="dirId != null">
+            dir_id = #{dirId}
+        </if>
+        <if test="dirId == null">
+            dir_id is null
+        </if>
         <if test="status != null">
             and status = #{status}
         </if>
