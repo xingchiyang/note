@@ -15,8 +15,8 @@ public interface NoteLogic {
 
 	public Note getNoteById(String id);
 
-	public Pagination<Note> getNotesList(String name, String dirId, Integer type, Integer status, Integer page, Integer size, String sortKey,
-			Integer sortType, String userId);
+	public Pagination<Note> getNotesList(String name, String dirId, Integer type, Integer status, Integer page,
+			Integer size, String sortKey, Integer sortType, String userId);
 
 	public void removeNotes(String ids);
 
@@ -27,6 +27,8 @@ public interface NoteLogic {
 	public void removeNotesByDirId(String dirId);
 
 	public List<Note> getNoteListByDirId(String dirId);
+
+	public List<Note> getNoteListByDirIdStatus(String dirId, Integer status);
 
 	public List<Note> getNotesByStatusUserId(Integer status, String userId);
 }

@@ -41,7 +41,6 @@ public class FileFrontServiceImpl implements FileFrontService {
 	@PostMapping(value = "/query", consumes = "*/*")
 	public String getFileByDirId(@RequestBody String jsonStr) {
 		String id = getRequestParamByKey(jsonStr, "id");
-		// 兼容jstree传过来的根节点id
 		if (StringUtils.isEmpty(id)) {
 			id = null;
 		}
@@ -65,7 +64,7 @@ public class FileFrontServiceImpl implements FileFrontService {
 		} else {
 			dirs = dirLogic.getDirsByParentIdStatusUserId(id, Integer.valueOf(FileConstant.STATUS_NORMAL),
 					SecurityContextHolder.getUserId());
-			notes = noteLogic.getNoteListByDirId(id);
+			notes = noteLogic.getNoteListByDirIdStatus(id, FileConstant.STATUS_NORMAL);
 		}
 
 		JSONArray ret = new JSONArray();

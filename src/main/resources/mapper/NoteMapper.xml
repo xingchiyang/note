@@ -101,6 +101,13 @@
         select * from note where dir_id = #{dirId}
     </select>
 
+    <select id="selectNotesByDirIdStatus" resultMap="noteResultMap">
+        select * from note where dir_id = #{dirId}
+        <if test="status != null">
+            and status = #{status}
+        </if>
+    </select>
+
     <select id="selectNotesByStatus" resultMap="noteResultMap">
         select * from note where status = #{status}
         <if test="userId == null">
