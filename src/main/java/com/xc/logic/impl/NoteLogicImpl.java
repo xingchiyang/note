@@ -195,8 +195,8 @@ public class NoteLogicImpl implements NoteLogic {
 	}
 
 	@Override
-	public List<Note> getNoteListByDirIdStatus(String dirId, Integer status) {
-		return noteDao.selectNotesByDirIdStatus(dirId, status);
+	public List<Note> getNoteListByDirIdStatusUserId(String dirId, List<Integer> status, String userId) {
+		return noteDao.selectNotesByDirIdStatusUserId(dirId, status, userId);
 	}
 
 	@Override

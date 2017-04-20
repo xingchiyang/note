@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -75,7 +76,7 @@ public class DirectoryFrontServiceImpl implements DirectoryFrontService {
 	@GetMapping(value = "query", consumes = "*/*")
 	public String getDirsByParentId(@RequestParam(value = "parentId", required = false) String parentId) {
 		List<Directory> dirs = directoryLogic
-				.getDirsByParentIdStatusUserId(parentId, Integer.valueOf(FileConstant.STATUS_NORMAL),
+				.getDirsByParentIdStatusUserId(parentId, Arrays.asList(Integer.valueOf(FileConstant.STATUS_NORMAL)),
 						SecurityContextHolder.getUserId());
 		return JsonUtil.includePropToJson(dirs);
 	}

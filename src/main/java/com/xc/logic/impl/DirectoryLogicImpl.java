@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class DirectoryLogicImpl implements DirectoryLogic {
 	}
 
 	@Override
-	public List<Directory> getDirsByParentIdStatusUserId(String id, Integer status, String userId) {
+	public List<Directory> getDirsByParentIdStatusUserId(String id, List<Integer> status, String userId) {
 		return directoryDao.selectDirsByParentIdStatus(id, status, userId);
 	}
 
@@ -71,7 +72,7 @@ public class DirectoryLogicImpl implements DirectoryLogic {
 			return;
 		}
 		// 删除子目录及子目录下面的笔记
-		List<Directory> subDirs = getDirsByParentIdStatusUserId(id, Integer.valueOf(FileConstant.STATUS_DELETED), userId);
+		List<Directory> subDirs = getDirsByParentIdStatusUserId(id, Arrays.asList(Integer.valueOf(FileConstant.STATUS_DELETED)), userId);
 		if (subDirs != null && subDirs.size() > 0) {
 			for (Directory subDir : subDirs) {
 				removeDir(subDir.getId(), userId);

@@ -14,7 +14,7 @@ public interface DirectoryLogic {
 
 	public Directory getDirById(String id);
 
-	public List<Directory> getDirsByParentIdStatusUserId(String id, Integer status, String userId);
+	public List<Directory> getDirsByParentIdStatusUserId(String id, List<Integer> status, String userId);
 
 	public void removeDir(String id, String userId);
 

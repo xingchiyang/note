@@ -59,7 +59,10 @@
             parent_id = #{parentId}
         </if>
         <if test="status != null">
-            and status = #{status}
+            and status in
+            <foreach collection="status" item="s" index="index"
+                     open="(" separator="," close=")">#{s}
+            </foreach>
         </if>
         <if test="userId == null">
             and user_id is null

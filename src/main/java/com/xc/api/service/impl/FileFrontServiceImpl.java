@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -56,15 +57,21 @@ public class FileFrontServiceImpl implements FileFrontService {
 				if (!Des.encryptBasedDes(readKeyStr).equals(getUserReadKey())) {
 					throw new NoteException(NoteExpCode.EXP_CODE_PARAM, "密码错误");
 				} else {
-					dirs = dirLogic.getDirsByParentIdStatusUserId(id, Integer.valueOf(FileConstant.STATUS_NORMAL),
+					dirs = dirLogic.getDirsByParentIdStatusUserId(id, Arrays
+									.asList(Integer.valueOf(FileConstant.STATUS_NORMAL), Integer.valueOf(FileConstant.STATUS_ENCRYPTED)),
 							SecurityContextHolder.getUserId());
-					notes = noteLogic.getNoteListByDirId(id);
+					notes = noteLogic.getNoteListByDirIdStatusUserId(id,
+							Arrays.asList(FileConstant.STATUS_NORMAL, FileConstant.STATUS_ENCRYPTED),
+							SecurityContextHolder.getUserId());
 				}
 			}
 		} else {
-			dirs = dirLogic.getDirsByParentIdStatusUserId(id, Integer.valueOf(FileConstant.STATUS_NORMAL),
+			dirs = dirLogic.getDirsByParentIdStatusUserId(id,
+					Arrays.asList(Integer.valueOf(FileConstant.STATUS_NORMAL), Integer.valueOf(FileConstant.STATUS_ENCRYPTED)),
 					SecurityContextHolder.getUserId());
-			notes = noteLogic.getNoteListByDirIdStatus(id, FileConstant.STATUS_NORMAL);
+			notes = noteLogic
+					.getNoteListByDirIdStatusUserId(id, Arrays.asList(FileConstant.STATUS_NORMAL, FileConstant.STATUS_ENCRYPTED),
+							SecurityContextHolder.getUserId());
 		}
 
 		JSONArray ret = new JSONArray();

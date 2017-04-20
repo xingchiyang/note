@@ -107,7 +107,7 @@
         </if>
     </select>
 
-    <select id="selectNotesByDirIdStatus" resultMap="noteResultMap">
+    <select id="selectNotesByDirIdStatusUserId" resultMap="noteResultMap">
         select * from note where
         <if test="dirId != null">
             dir_id = #{dirId}
@@ -116,7 +116,16 @@
             dir_id is null
         </if>
         <if test="status != null">
-            and status = #{status}
+            and status in
+            <foreach collection="status" item="s" index="index"
+                     open="(" separator="," close=")">#{s}
+            </foreach>
+        </if>
+        <if test="userId == null">
+            and user_id is null
+        </if>
+        <if test="userId != null">
+            and user_id = #{userId}
         </if>
     </select>
 

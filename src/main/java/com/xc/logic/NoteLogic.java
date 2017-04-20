@@ -28,7 +28,7 @@ public interface NoteLogic {
 
 	public List<Note> getNoteListByDirId(String dirId);
 
-	public List<Note> getNoteListByDirIdStatus(String dirId, Integer status);
+	public List<Note> getNoteListByDirIdStatusUserId(String dirId, List<Integer> status, String userId);
 
 	public List<Note> getNotesByStatusUserId(Integer status, String userId);
 }

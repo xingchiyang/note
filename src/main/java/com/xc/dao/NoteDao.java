@@ -29,7 +29,8 @@ public interface NoteDao {
 
 	public List<Note> selectNotesByDirId(@Param("dirId") String dirId);
 
-	public List<Note> selectNotesByDirIdStatus(@Param("dirId") String dirId, @Param("status") Integer status);
+	public List<Note> selectNotesByDirIdStatusUserId(@Param("dirId") String dirId, @Param("status") List<Integer> status,
+			@Param("userId") String userId);
 
 	public List<Note> selectNotesByStatus(@Param("status") Integer status, @Param("userId") String userId);
 
