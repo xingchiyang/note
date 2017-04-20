@@ -92,6 +92,17 @@ public class UserFrontServiceImpl implements UserFrontService {
 		return JsonUtil.includePropToJson(null);
 	}
 
+	@Override
+	@PostMapping("/passwd/readKey/check")
+	public String checkReadKey(@RequestBody String jsonString) {
+		ValidateUtil.validateStrBlank(jsonString, "请求参数为空");
+		String readKey = JSON.parseObject(jsonString).getString("readKey");
+		ValidateUtil.validateStrBlank(readKey, "密码不能为空");
+		User user = userLogic.getUserById(SecurityContextHolder.getUserId());
+		ValidateUtil.validateTrue(Des.encryptBasedDes(readKey).equals(user.getReadKey()), "阅读密码不正确");
+		return JsonUtil.includePropToJson(null);
+	}
+
 	static class PasswdInfo {
 		private Integer type;
 		private String oldPasswd;

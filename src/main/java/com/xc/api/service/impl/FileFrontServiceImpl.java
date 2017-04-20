@@ -89,6 +89,7 @@ public class FileFrontServiceImpl implements FileFrontService {
 				object.put("children", true);
 				JSONObject aAttr = new JSONObject();
 				aAttr.put("isDir", true);
+				aAttr.put("status", dir.getStatus());
 				object.put("a_attr", aAttr);
 				ret.add(object);
 			}
@@ -105,6 +106,7 @@ public class FileFrontServiceImpl implements FileFrontService {
 				}
 				JSONObject aAttr = new JSONObject();
 				aAttr.put("isDir", false);
+				aAttr.put("status", note.getStatus());
 				object.put("a_attr", aAttr);
 				ret.add(object);
 			}
@@ -123,6 +125,7 @@ public class FileFrontServiceImpl implements FileFrontService {
 		root.put("children", ret);
 		JSONObject aAttr = new JSONObject();
 		aAttr.put("isDir", true);
+		aAttr.put("status", directory != null ? directory.getStatus() : FileConstant.STATUS_NORMAL);
 		root.put("a_attr", aAttr);
 		return JsonUtil.includePropToJson(root);
 	}

@@ -13,4 +13,6 @@ public interface UserFrontService {
 
 	public String changePasswd(String jsonString);
 
+	public String checkReadKey(String jsonString);
+
 }
