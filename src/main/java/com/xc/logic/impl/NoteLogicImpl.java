@@ -68,6 +68,7 @@ public class NoteLogicImpl implements NoteLogic {
 		oldNote.setTitle(note.getTitle());
 		oldNote.setTags(note.getTags());
 		oldNote.setModifyTime(new Date());
+		oldNote.setStatus(note.getStatus());
 		noteDao.update(oldNote);
 
 		updateAttach(note);
