@@ -5,6 +5,7 @@ import com.xc.util.Criterions;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2017/02/22 0022.
@@ -33,5 +34,7 @@ public interface NoteDao {
 			@Param("userId") String userId);
 
 	public List<Note> selectNotesByStatus(@Param("status") Integer status, @Param("userId") String userId);
+
+	public List<Note> selectNotesByMap(Map<String, Object> map);
 
 }

@@ -138,4 +138,22 @@
             and user_id = #{userId}
         </if>
     </select>
+
+    <select id="selectNotesByMap" resultMap="noteResultMap" parameterType="java.util.Map">
+        select * from note
+        where (title like concat('%', #{key}, '%')
+        or tags like concat('%', (select id from tag where name = #{key}) , '%'))
+        <if test="status != null">
+            and status in
+            <foreach collection="status" item="s" index="index"
+                     open="(" separator="," close=")">#{s}
+            </foreach>
+        </if>
+        <if test="userId == null">
+            and user_id is null
+        </if>
+        <if test="userId != null">
+            and user_id = #{userId}
+        </if>
+    </select>
 </mapper>

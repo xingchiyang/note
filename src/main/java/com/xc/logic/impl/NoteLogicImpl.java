@@ -20,9 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Administrator on 2017/02/22 0022.
@@ -205,6 +203,15 @@ public class NoteLogicImpl implements NoteLogic {
 		if (status == null)
 			return null;
 		return noteDao.selectNotesByStatus(status, userId);
+	}
+
+	@Override
+	public List<Note> getNotesBySearchKey(String key, List<Integer> status, String userId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("key", key);
+		map.put("status", status);
+		map.put("userId", userId);
+		return noteDao.selectNotesByMap(map);
 	}
 
 }

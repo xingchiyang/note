@@ -31,4 +31,6 @@ public interface NoteLogic {
 	public List<Note> getNoteListByDirIdStatusUserId(String dirId, List<Integer> status, String userId);
 
 	public List<Note> getNotesByStatusUserId(Integer status, String userId);
+
+	public List<Note> getNotesBySearchKey(String key, List<Integer> status, String userId);
 }

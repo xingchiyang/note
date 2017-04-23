@@ -7,6 +7,8 @@ public interface FileFrontService {
 
 	public String getFileByDirId(String jsonStr);
 
+	public String searchFile(String key);
+
 	public String getFileInRecycle();
 
 	public String clearAllFromRecycle();

@@ -130,6 +130,34 @@ public class FileFrontServiceImpl implements FileFrontService {
 		return JsonUtil.includePropToJson(root);
 	}
 
+	@Override
+	@GetMapping(value = "/search", consumes = "*/*")
+	public String searchFile(@RequestParam(value = "key", required = false) String key) {
+		if (StringUtils.isEmpty(key)) {
+			return JsonUtil.includePropToJson(null);
+		}
+		List<Note> notes = noteLogic
+				.getNotesBySearchKey(key, Arrays.asList(FileConstant.STATUS_ENCRYPTED, FileConstant.STATUS_NORMAL),
+						SecurityContextHolder.getUserId());
+		JSONArray ret = new JSONArray();
+		for (Note note : notes) {
+			JSONObject object = new JSONObject();
+			object.put("id", note.getId());
+			object.put("text", note.getTitle());
+			if (FileConstant.STATUS_ENCRYPTED == note.getStatus()) {
+				object.put("icon", "../../images/fileLocked.png");
+			} else {
+				object.put("icon", "../../images/file.png");
+			}
+			JSONObject aAttr = new JSONObject();
+			aAttr.put("isDir", false);
+			aAttr.put("status", note.getStatus());
+			object.put("a_attr", aAttr);
+			ret.add(object);
+		}
+		return JsonUtil.includePropToJson(ret);
+	}
+
 	private String getRequestParamByKey(String jsonStr, String key) {
 		if (StringUtils.isEmpty(jsonStr)) {
 			return null;
