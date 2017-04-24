@@ -24,7 +24,7 @@ fi
 
 #start jvm
 $JAVA $JAVA_OPTS -Dlog.rootDir=$logDir -Dlog.module=$module -D$module -Dlogback.configurationFile=$LOGBACK_CONFIGFILE \
--Dbase.dir=$BASE_DIR -cp $CLASS_PATH -jar $jarName >/dev/null 2>&1 &
+-Dbase.dir=$BASE_DIR -cp $CLASS_PATH -jar ./module/$jarName >/dev/null 2>&1 &
 
 if [ $? -eq 0 ]
 	then
